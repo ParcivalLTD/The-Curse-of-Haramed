@@ -18,6 +18,6 @@ public class CloseButton : MonoBehaviour
 
     public void OnButtonClick()
     {
-        canvas.SetActive(false);
+        transform.parent.parent.gameObject.SetActive(false);
     }
 }

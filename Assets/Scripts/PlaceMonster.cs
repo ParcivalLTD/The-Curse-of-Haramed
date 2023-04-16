@@ -1,5 +1,4 @@
-﻿using Microsoft.Unity.VisualStudio.Editor;
-using System.Diagnostics.Contracts;
+﻿using System.Diagnostics.Contracts;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -72,6 +71,18 @@ public class PlaceMonster : MonoBehaviour
         {
             canvas = monster.transform.Find(canvasName).gameObject;
 
+            // Find all gameobjects with the tag "CanvasPre"
+            GameObject[] canvasPreObjects = GameObject.FindGameObjectsWithTag("CanvasPre");
+
+            foreach (GameObject canvasPreObject in canvasPreObjects)
+            {
+                // Disable all gameobjects with the tag "CanvasPre" except for the one attached to the monster
+                if (canvasPreObject != canvas)
+                {
+                    canvasPreObject.SetActive(false);
+                }
+            }
+
             if (canvasIsShown)
             {
                 canvas.SetActive(false);
@@ -94,6 +105,8 @@ public class PlaceMonster : MonoBehaviour
             }
         }
     }
+
+
 
     private void PlaceMonsterAtIndex(int index)
     {

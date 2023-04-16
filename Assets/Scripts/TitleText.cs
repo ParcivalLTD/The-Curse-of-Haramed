@@ -17,9 +17,5 @@ public class TitleText : MonoBehaviour
     void Update()
     {
         this.GetComponent<TextMeshProUGUI>().text = monster.GetComponent<MonsterData>().getNameOfMonster() + " (Level: " + monster.GetComponent<MonsterData>().CurrentLevel.Level + ")";
-
-
-
-
     }
 }

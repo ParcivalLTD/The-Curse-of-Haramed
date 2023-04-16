@@ -20,6 +20,14 @@ public class CameraShake : MonoBehaviour
         transformAtOrigin = transform;
     }
 
+    void Start()
+    {
+        Screen.SetResolution(1920, 1080, true);
+        Screen.fullScreen = false;
+
+    }
+
+
     void Update()
     {
         if (!shaking)
