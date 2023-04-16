@@ -1,14 +1,14 @@
-#The Curse of Haramed
-##Spielbeschreibung / Lore:
+# The Curse of Haramed
+## Spielbeschreibung / Lore:
 The Curse of Haramed ist ein Action-Strategiespiel, das in einer Welt spielt, in der Tiere mit dem Verstand von Menschen leben. Der Spieler muss das Land von einem Fluch befreien, der von einem mächtigen und bösartigen Menschen namens Magomed ausgeht. Der Fluch hat ihn in einen Haramed, ein Wesen mit unstillbarem Hunger nach dem Fleisch von Schweinen, Katzen und Creepern verwandelt. Haramed hat es geschafft, sich in mehrere Klone mit unterschiedlicher Stärke zu teilen, um seine Feinde zu besiegen. Der Spieler muss alle Klone besiegen und gegen Haramed im Endkampf antreten, um den Fluch zu brechen.
 
-##Spielmechanik:
+## Spielmechanik:
 Der Spieler muss seine Basis schützen, indem er Verteidigungsanlagen (Tiere) platziert und Feinde, die sich ihm nähern, bekämpft. Die Tiere können verbessert werden, Feinde effektiver zu besiegen. Der Spieler muss auch eine Strategie entwickeln, um die verschiedenen Klone von Haramed zu besiegen, die alle unterschiedliche Stärken und Schwächen haben. 
   
 ![image](https://user-images.githubusercontent.com/79400664/232307601-b9d686e4-6149-4c41-8717-7cd7992d7c0e.png)
 ![image](https://user-images.githubusercontent.com/79400664/232307608-b7067a65-5424-4a42-beb1-be924cecff43.png)
 
-##Steuerung:
+## Steuerung:
 Der Spieler kann die Tiere platzieren in dem er über dem Platzier-Spot hovered, und dann die zugehörige Taste pro Tier drückt (1, 2, 3, …)
 Es gibt aktuell 10 Skripts, die jeweils eine Klasse enthalten:
 
@@ -23,7 +23,9 @@ Es gibt aktuell 10 Skripts, die jeweils eine Klasse enthalten:
 •	ShootEnemies: Ermöglicht es Monstern, auf Gegner zu schießen, die sich in ihrer Reichweite befinden. Wählt das am nächsten liegende Ziel aus und rotiert das Monster, um auf den Gegner zu zielen.
 •	GameManagerBehavior: Verwaltet den Spielzustand, einschließlich Gold, Wellen und Gesundheit. Aktualisiert die Benutzeroberfläche und steuert das Spielende.
 Alle Spielassets sind selbst gezeichnet.
-              
+
+## Einige Gegner / Monster Assets: 
+
 ![image](https://user-images.githubusercontent.com/79400664/232307641-f24a8d50-d450-41bb-aa10-f0cae1b293a4.png)
 ![image](https://user-images.githubusercontent.com/79400664/232307647-60728c97-9d95-4665-b5f1-24f8eb2516f4.png)
 ![image](https://user-images.githubusercontent.com/79400664/232307650-802e6b58-8b1f-45e6-84f6-3205cc37c04f.png)
