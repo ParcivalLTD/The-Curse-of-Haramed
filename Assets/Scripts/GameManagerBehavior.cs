@@ -14,6 +14,8 @@ public class GameManagerBehavior : MonoBehaviour
     public Text healthLabel;
     public GameObject[] healthIndicator;
     private int health;
+    public bool canvasIsShown = false;
+    private static Vector3 savedPosition;
     public int Health
     {
         get
@@ -50,6 +52,24 @@ public class GameManagerBehavior : MonoBehaviour
         }
     }
 
+    public void SavePosition(Vector3 position)
+    {
+        savedPosition = position;
+    }
+
+    public float GetSavedPosition(int x)
+    {
+        if(x == 0)
+        {
+            return savedPosition.x;
+        } else if(x == 1) { return savedPosition.y; }
+        else if(x == 2) {  return savedPosition.z; }
+        else
+        {
+            return 0;
+        }
+    }
+
 
     public int Wave
     {
@@ -71,6 +91,8 @@ public class GameManagerBehavior : MonoBehaviour
         }
     }
 
+    
+
     public int Gold
     {
         get
@@ -89,6 +111,34 @@ public class GameManagerBehavior : MonoBehaviour
         Gold = 1000;
         Wave = 0;
         Health = 5;
+        GameObject[] monsters = GameObject.FindGameObjectsWithTag("Monster");
+        foreach (GameObject monster in monsters)
+        {
+            if (monster.GetComponent<PlaceMonster>().getCanvas() == true)
+            {
+                foreach (GameObject monster2 in monsters)
+                {
+                    monster2.GetComponent<PlaceMonster>().HideCanvas();
+                }
+                monster.GetComponent<PlaceMonster>().ShowCanvas();
+                break;
+            }
+        }
+    }
+
+    public void ShowCanvas()
+    {
+        canvasIsShown = true;
+    }
+
+    public void HideCanvas()
+    {
+        canvasIsShown = false;
+    }
+
+    public bool getCanvas()
+    {
+        return canvasIsShown;
     }
 
     void Update()

@@ -4,9 +4,9 @@ using System.Collections;
 
 public class animateStartScreenText : MonoBehaviour
 {
-    public float floatHeight = 10f; // The maximum height the text will float
-    public float floatSpeed = 1f; // The speed at which the text will float
-    public float delayTime = 1f; // The delay before the floating starts
+    public float floatHeight = 10f; 
+    public float floatSpeed = 1f;
+    public float delayTime = 1f;
 
     private RectTransform rectTransform;
     private Vector3 startPos;

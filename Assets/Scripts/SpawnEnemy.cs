@@ -18,6 +18,7 @@ public class SpawnEnemy : MonoBehaviour
     public int timeBetweenWaves = 5;
     public int goldperWave = 100;
     public GameObject[] monsterIcons;
+    private int monsterCost;
 
     private GameManagerBehavior gameManager;
 
@@ -69,6 +70,36 @@ public class SpawnEnemy : MonoBehaviour
             GameObject gameOverText = GameObject.FindGameObjectWithTag("GameWon");
             gameOverText.GetComponent<Animator>().SetBool("gameOver", true);
         }
+
+        foreach (GameObject icon in monsterIcons)
+        {
+            
+            
+            if (icon.name == "cat0")
+            {
+                monsterCost = 200;
+            } else if (icon.name == "platapus0")
+            {
+                monsterCost = 500;
+            } else
+            {
+                monsterCost = 0;
+            }
+
+            if (gameManager.Gold < monsterCost)
+            {
+                SpriteRenderer spriteRenderer = icon.GetComponent<SpriteRenderer>();
+                spriteRenderer.color = Color.gray;
+                icon.transform.Find("strikthrough").GetComponent<SpriteRenderer>().gameObject.SetActive(true);
+
+            } else
+            {
+                SpriteRenderer spriteRenderer = icon.GetComponent<SpriteRenderer>();
+                spriteRenderer.color = Color.white;
+                icon.transform.Find("strikthrough").GetComponent<SpriteRenderer>().gameObject.SetActive(false);
+            }
+        }
+
     }
 
 

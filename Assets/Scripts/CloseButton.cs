@@ -18,6 +18,7 @@ public class CloseButton : MonoBehaviour
 
     public void OnButtonClick()
     {
-        transform.parent.parent.gameObject.SetActive(false);
+        Debug.Log("dsfsdf");
     }
+
 }

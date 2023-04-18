@@ -7,10 +7,10 @@ public class PlaceMonster : MonoBehaviour
 {
     public GameObject[] monsterPrefabs;
     private GameObject monster;
+    private static GameObject selectedMonster;
     private GameManagerBehavior gameManager;
     public string canvasName;
     public GameObject canvas;
-    public bool radShow = false;
     public bool canvasIsShown = false;
 
     void Start()
@@ -18,9 +18,19 @@ public class PlaceMonster : MonoBehaviour
         gameManager = GameObject.Find("GameManager").GetComponent<GameManagerBehavior>();
     }
 
+    public bool getCanvas() { return canvasIsShown; }
+    public void ShowCanvas()
+    {
+        canvasIsShown = true;
+    }
+
+    public void HideCanvas()
+    {
+        canvasIsShown = false;
+    }
+
     void Update()
     {
-
         RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
         if (hit.collider != null)
         {
@@ -34,7 +44,7 @@ public class PlaceMonster : MonoBehaviour
                 }
                 else if (Input.GetKeyDown(KeyCode.Alpha2))
                 {
-                    if (gameManager.Wave == 9)
+                    if (gameManager.Wave >= 9)
                     {
                         PlaceMonsterAtIndex(1);
                     }
@@ -42,22 +52,19 @@ public class PlaceMonster : MonoBehaviour
             }
         }
 
+        
+
         if (canvasIsShown && canvas != null)
         {
             canvas.SetActive(true);
-        } else if(canvasIsShown == false && canvas != null)
-        {
-            canvas.SetActive(false);
-        }
-
-        if (radShow && canvas != null)
-        {
             canvas.transform.Find("circle").gameObject.SetActive(true);
             canvas.transform.Find("circle").position = monster.transform.position;
             float radius = monster.GetComponent<CircleCollider2D>().radius;
             canvas.transform.Find("circle").localScale = new Vector3(radius, radius, radius);
-        } else if (radShow == false && canvas != null) 
+        }
+        else if (canvasIsShown == false && canvas != null)
         {
+            canvas.SetActive(false);
             canvas.transform.Find("circle").gameObject.SetActive(false);
             canvas.transform.Find("circle").position = monster.transform.position;
             float radius = monster.GetComponent<CircleCollider2D>().radius;
@@ -71,41 +78,36 @@ public class PlaceMonster : MonoBehaviour
         {
             canvas = monster.transform.Find(canvasName).gameObject;
 
-            // Find all gameobjects with the tag "CanvasPre"
-            GameObject[] canvasPreObjects = GameObject.FindGameObjectsWithTag("CanvasPre");
-
-            foreach (GameObject canvasPreObject in canvasPreObjects)
-            {
-                // Disable all gameobjects with the tag "CanvasPre" except for the one attached to the monster
-                if (canvasPreObject != canvas)
-                {
-                    canvasPreObject.SetActive(false);
-                }
-            }
-
             if (canvasIsShown)
             {
-                canvas.SetActive(false);
                 canvasIsShown = false;
+                gameManager.SavePosition(canvas.transform.Find("Panel").gameObject.transform.position);
             }
             else
             {
-                canvas.SetActive(true);
                 canvasIsShown = true;
+                float x = gameManager.GetSavedPosition(0);
+                float y = gameManager.GetSavedPosition(1);
+                float z = gameManager.GetSavedPosition(2);
+                //canvas.transform.Find("Panel").gameObject.transform.position = new Vector3(x, y, z);
             }
+        }
 
-            if (radShow)
+        hideOtherCanvases();
+        
+    }
+
+    public void hideOtherCanvases()
+    {
+        GameObject[] openspots = GameObject.FindGameObjectsWithTag("Openspot");
+        foreach (GameObject openspot in openspots)
+        {
+            if (openspot != this.gameObject)
             {
-                canvas.transform.position = monster.transform.position;
-                radShow = false;
-            }
-            else
-            {
-                radShow = true;
+                openspot.GetComponent<PlaceMonster>().HideCanvas();
             }
         }
     }
-
 
 
     private void PlaceMonsterAtIndex(int index)
@@ -124,8 +126,13 @@ public class PlaceMonster : MonoBehaviour
         {
             monster = Instantiate(monsterPrefabs[index], mousePosition, Quaternion.identity);
             gameManager.Gold -= monster.GetComponent<MonsterData>().CurrentLevel.cost;
-
-            canvasIsShown = false;
+            canvasIsShown = true;
+            canvas = monster.transform.Find(canvasName).gameObject;
+            canvas.transform.Find("circle").gameObject.SetActive(true);
+            canvas.transform.Find("circle").position = monster.transform.position;
+            float radius = monster.GetComponent<CircleCollider2D>().radius;
+            canvas.transform.Find("circle").localScale = new Vector3(radius, radius, radius);
+            hideOtherCanvases();
         }
     }
 
