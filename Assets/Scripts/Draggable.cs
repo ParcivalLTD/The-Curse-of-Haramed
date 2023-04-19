@@ -25,8 +25,5 @@ public class Draggable : MonoBehaviour, IDragHandler, IPointerDownHandler, IPoin
         rectTransform.anchoredPosition = position;
     }
 
-    public void OnPointerUp(PointerEventData eventData)
-    {
-        // Do any additional code you want to run when the user releases the panel.
-    }
+    public void OnPointerUp(PointerEventData eventData) {}
 }

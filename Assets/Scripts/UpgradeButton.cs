@@ -10,6 +10,8 @@ public class UpgradeButton : MonoBehaviour
     public GameObject monster;
     private GameManagerBehavior gameManager;
     public GameObject UpgradeforObj;
+    public GameObject UpgradeData;
+    public GameObject UpgradeData2;
 
     void Start()
     {
@@ -34,8 +36,8 @@ public class UpgradeButton : MonoBehaviour
         MonsterLevel nextLevel = monsterData.GetNextLevel();
         string upgradeInfo = "Damage: \n" + currentLevel.damage + " \nSpeed: ->\n" + currentLevel.speed + "   ->\nFirerate:\n" + currentLevel.fireRate + "  ->\n";
         string upgradeInfo2 = "\n" + nextLevel.damage + "\n\n" + nextLevel.speed + "\n\n" + nextLevel.fireRate + "";
-        transform.Find("UpgradeData").GetComponent<TextMeshProUGUI>().text = upgradeInfo;
-        transform.Find("UpgradeData2").GetComponent<TextMeshProUGUI>().text = upgradeInfo2;
+        UpgradeData.GetComponent<TextMeshProUGUI>().text = upgradeInfo;
+        UpgradeData2.GetComponent<TextMeshProUGUI>().text = upgradeInfo2;
 
         UpgradeforObj.GetComponent<TextMeshProUGUI>().text = "- " + monster.GetComponent<MonsterData>().GetNextLevel().cost.ToString() + " Gold";
     }
