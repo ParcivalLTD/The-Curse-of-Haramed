@@ -16,10 +16,9 @@ public class MonsterLevel
 
     void Start()
     {
-        BulletBehavior bulletC = bullet.GetComponent<BulletBehavior>();
-        bulletC.damage = damage;
-        bulletC.speed = speed;
-        bulletC.transform.localScale = new Vector3(scale, scale, scale);
+        bullet.GetComponent<BulletBehavior>().setDamage(damage);
+        //bullet.GetComponent<BulletBehavior>().setSpeed(speed);
+        bullet.GetComponent<BulletBehavior>().transform.localScale = new Vector3(scale, scale, scale);
     }
 }
 

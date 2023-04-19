@@ -89,11 +89,9 @@ public class PlaceMonster : MonoBehaviour
             else
             {
                 canvasIsShown = true;
-                RectTransform rectTransform = canvas.transform.Find("Panel").GetComponent<RectTransform>();
                 float x = gameManager.GetSavedPosition(0);
                 float y = gameManager.GetSavedPosition(1);
                 float z = gameManager.GetSavedPosition(2);
-                rectTransform.anchoredPosition = new Vector2(x, y);
                 //canvas.transform.Find("Panel").gameObject.transform.position = new Vector3(x, y, z);
             }
         }

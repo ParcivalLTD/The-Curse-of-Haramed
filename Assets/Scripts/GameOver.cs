@@ -7,7 +7,7 @@ public class GameOver : MonoBehaviour
 
     void RestartLevel()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene("Startscreen");
     }
 
 }
