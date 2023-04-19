@@ -65,10 +65,13 @@ public class PlaceMonster : MonoBehaviour
         else if (canvasIsShown == false && canvas != null)
         {
             canvas.SetActive(false);
+            if (monster.transform.name != "Platatpus")
+            {
             canvas.transform.Find("circle").gameObject.SetActive(false);
             canvas.transform.Find("circle").position = monster.transform.position;
             float radius = monster.GetComponent<CircleCollider2D>().radius;
             canvas.transform.Find("circle").localScale = new Vector3(radius, radius, radius);
+            }
         }
     }
 
