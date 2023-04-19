@@ -18,7 +18,12 @@ public class CloseButton : MonoBehaviour
 
     public void OnButtonClick()
     {
-        Debug.Log("dsfsdf");
+
+        GameObject[] openspots = GameObject.FindGameObjectsWithTag("Openspot");
+        foreach (GameObject openspot in openspots)
+        {
+            openspot.GetComponent<PlaceMonster>().HideCanvas();
+        }
     }
 
 }
