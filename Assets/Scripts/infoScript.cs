@@ -16,6 +16,9 @@ public class infoScript : MonoBehaviour
         } else if(transform.parent.parent.parent.name.Contains("Platapus"))
         {
             textMeshPro.text = "A Platapus. With a flick of its paw, it hurls knives and other deadly objects with incredible force, raining destruction upon its foes";
+        } else if(transform.parent.parent.parent.name.Contains("Gorilla"))
+        {
+            textMeshPro.text = "A Gorilla, whose strikes rain down upon its foes with devastating force. Its wrath is unending, and it takes delight in the taste of younglings.";
         }
     }
 

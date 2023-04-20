@@ -81,7 +81,12 @@ public class SpawnEnemy : MonoBehaviour
             } else if (icon.name == "platapus0")
             {
                 monsterCost = 500;
-            } else
+            }
+            else if (icon.name == "gorilla0")
+            {
+                monsterCost = 800;
+            }
+            else
             {
                 monsterCost = 0;
             }

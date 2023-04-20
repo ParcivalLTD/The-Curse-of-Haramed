@@ -16,15 +16,12 @@ public class MonsterLevel
 
     void Start()
     {
-        bullet.GetComponent<BulletBehavior>().setDamage(damage);
-        //bullet.GetComponent<BulletBehavior>().setSpeed(speed);
         bullet.GetComponent<BulletBehavior>().transform.localScale = new Vector3(scale, scale, scale);
     }
 }
 
 public class MonsterData : MonoBehaviour
 {
-
     public List<MonsterLevel> levels;
     private MonsterLevel currentLevel;
     public string nameOfMonster;
@@ -36,6 +33,11 @@ public class MonsterData : MonoBehaviour
 
     void Update()
     {
+    }
+
+    public List<MonsterLevel> GetLevels()
+    {
+        return levels;
     }
 
     public string getNameOfMonster()

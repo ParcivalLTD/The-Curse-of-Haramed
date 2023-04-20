@@ -4,15 +4,13 @@ using UnityEngine;
 
 public class BulletBehavior : MonoBehaviour
 {
-    private float speed = 10;
-    private int damage;
+    public float speed;
+    public int damage;
     public GameObject target;
     public Vector3 startPosition;
     public Vector3 targetPosition;
-
     private float distance;
     private float startTime;
-
     private GameManagerBehavior gameManager;
 
     public void setDamage(int damage1)

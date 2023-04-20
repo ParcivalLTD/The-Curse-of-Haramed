@@ -49,6 +49,13 @@ public class PlaceMonster : MonoBehaviour
                         PlaceMonsterAtIndex(1);
                     }
                 }
+                else if (Input.GetKeyDown(KeyCode.Alpha3))
+                {
+                    if (gameManager.Wave >= 1)
+                    {
+                        PlaceMonsterAtIndex(2);
+                    }
+                }
             }
         }
 

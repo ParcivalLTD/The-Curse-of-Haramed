@@ -13,9 +13,6 @@ public class Startscreen : MonoBehaviour
         Screen.fullScreen = true;
     }
 
-
-
-
     void Update()
     {
         if (Input.anyKeyDown)

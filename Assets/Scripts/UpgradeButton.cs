@@ -39,6 +39,9 @@ public class UpgradeButton : MonoBehaviour
         UpgradeData.GetComponent<TextMeshProUGUI>().text = upgradeInfo;
         UpgradeData2.GetComponent<TextMeshProUGUI>().text = upgradeInfo2;
         UpgradeforObj.GetComponent<TextMeshProUGUI>().text = "- " + monster.GetComponent<MonsterData>().GetNextLevel().cost.ToString() + " Gold";
+
+        currentLevel.bullet.GetComponent<BulletBehavior>().setDamage(currentLevel.damage);
+        currentLevel.bullet.GetComponent<BulletBehavior>().setSpeed(currentLevel.speed);
     }
 
 
