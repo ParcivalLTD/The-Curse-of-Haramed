@@ -51,6 +51,8 @@ public class BulletBehavior : MonoBehaviour
 
                     gameManager.Gold += (int) healthBar.maxHealth / 2;
                 }
+
+                
             }
             Destroy(gameObject);
         }

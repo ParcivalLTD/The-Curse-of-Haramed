@@ -20,7 +20,7 @@ public class SellButton : MonoBehaviour
     void Update()
     {
         int refundAmount = (int)(monster.GetComponent<MonsterData>().CurrentLevel.cost * 0.7f);
-        sellforobj.GetComponent<TextMeshProUGUI>().text = "+ " + refundAmount.ToString() + " Gold";
+        sellforobj.GetComponent<TextMeshProUGUI>().text = "$" + refundAmount.ToString();
     }
 
     public void OnButtonClick()

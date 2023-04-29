@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Animations;
+using Unity.VisualScripting;
 
 [System.Serializable]
 public class MonsterLevel
@@ -13,11 +15,14 @@ public class MonsterLevel
     public int speed;
     public float scale = 1f;
     public int Level;
+    public float radius;
 
     void Start()
     {
         bullet.GetComponent<BulletBehavior>().transform.localScale = new Vector3(scale, scale, scale);
     }
+
+
 }
 
 public class MonsterData : MonoBehaviour
@@ -25,6 +30,7 @@ public class MonsterData : MonoBehaviour
     public List<MonsterLevel> levels;
     private MonsterLevel currentLevel;
     public string nameOfMonster;
+    public int totalCost;
 
     void Start()
     {
@@ -102,13 +108,13 @@ public class MonsterData : MonoBehaviour
         }
     }
 
+    public void setTotalCost(int cost)
+    {
+        totalCost += cost;
+    }
+
     public int GetTotalCost()
     {
-        int totalCost = 0;
-        foreach (MonsterLevel level in levels)
-        {
-            totalCost += level.cost;
-        }
         return totalCost;
     }
 

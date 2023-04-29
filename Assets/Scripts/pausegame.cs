@@ -51,5 +51,6 @@ public class pausegame : MonoBehaviour
     public void Restart()
     {
         SceneManager.LoadScene("Gamescene");
+        TogglePause();
     }
 }

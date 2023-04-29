@@ -59,9 +59,15 @@ public class PlaceMonster : MonoBehaviour
             }
         }
 
-        
+        if (Input.GetMouseButtonDown(1) && monster != null)
+        {
+            int refundAmount = (int)(monster.GetComponent<MonsterData>().CurrentLevel.cost * 0.7f);
+            gameManager.Gold += refundAmount;
+            Destroy(monster);
+            monster.transform.Find("panel").gameObject.SetActive(false);
+        }
 
-        if (canvasIsShown && canvas != null)
+            if (canvasIsShown && canvas != null)
         {
             canvas.SetActive(true);
             canvas.transform.Find("circle").gameObject.SetActive(true);

@@ -16,6 +16,13 @@ public class TitleText : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        this.GetComponent<TextMeshProUGUI>().text = monster.GetComponent<MonsterData>().getNameOfMonster() + "(<color=red>" + monster.GetComponent<MonsterData>().CurrentLevel.Level + "</color>)";
+        if (monster.GetComponent<MonsterData>().CurrentLevel.Level != 10)
+        {
+            this.GetComponent<TextMeshProUGUI>().text = monster.GetComponent<MonsterData>().getNameOfMonster() + "(<color=red>" + monster.GetComponent<MonsterData>().CurrentLevel.Level + "</color>)";
+        }
+        else
+        {
+            this.GetComponent<TextMeshProUGUI>().text = monster.GetComponent<MonsterData>().getNameOfMonster() + "(<color=red>MAX</color>)";
+        }
     }
 }

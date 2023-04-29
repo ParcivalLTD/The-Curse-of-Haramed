@@ -1,6 +1,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class ShootEnemies : MonoBehaviour
@@ -9,7 +10,7 @@ public class ShootEnemies : MonoBehaviour
     private float lastShotTime;
     private MonsterData monsterData;
     public GameObject bulletPrefab;
-
+    public GameObject damageDealt;
 
 
     void Start()
@@ -40,6 +41,10 @@ public class ShootEnemies : MonoBehaviour
             {
                 Shoot(target.GetComponent<Collider2D>());
                 lastShotTime = Time.time;
+                float damage = bulletPrefab.gameObject.GetComponent<BulletBehavior>().damage;
+                int totalDamageInt = int.Parse(damageDealt.GetComponent<TextMeshProUGUI>().text);
+                totalDamageInt += (int)damage;
+                damageDealt.GetComponent<TextMeshProUGUI>().text = totalDamageInt.ToString();
             }
 
             Vector3 direction = gameObject.transform.position - target.transform.position;

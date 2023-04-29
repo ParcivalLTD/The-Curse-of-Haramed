@@ -1,67 +1,199 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+using System;
+using System.Data.Common;
 
 public class UpgradeButton : MonoBehaviour
 {
     public GameObject monster;
     private GameManagerBehavior gameManager;
-    public GameObject UpgradeforObj;
-    public GameObject UpgradeData;
-    public GameObject UpgradeData2;
+
+    public GameObject damageButton;
+    public GameObject fireRateButton;
+    public GameObject radiusButton;
+
+    public GameObject damageUpgradeData;
+    public GameObject fireRateUpgradeData;
+    public GameObject radiusUpgradeData;
+
+    public TextMeshProUGUI damageUpgradeFor;
+    public TextMeshProUGUI fireRateUpgradeFor;
+    public TextMeshProUGUI radiusUpgradeFor;
+
+    public int damageCost;
+    public int fireRateCost;
+    public int radiusCost;
+
+    public int damageIncrease = 7;
+
+    public int damageLevel = 1;
+    public int fireRateLevel = 1;
+    public int radiusLevel = 1;
+
+    public float radius;
 
     void Start()
     {
         monster = transform.parent.parent.parent.gameObject;
         gameManager = GameObject.Find("GameManager").GetComponent<GameManagerBehavior>();
+
+        damageCost = monster.GetComponent<MonsterData>().levels[0].cost;
+        damageUpgradeData.GetComponent<TextMeshProUGUI>().text = "<b>Damage (" + damageLevel + "): </b>\n\n" + monster.GetComponent<MonsterData>().CurrentLevel.damage + " to " + (monster.GetComponent<MonsterData>().CurrentLevel.damage + damageIncrease);
+        damageUpgradeFor.GetComponent<TextMeshProUGUI>().text = "- $" + damageCost;
+        monster.GetComponent<MonsterData>().CurrentLevel.bullet.GetComponent<BulletBehavior>().damage = monster.GetComponent<MonsterData>().levels[0].damage;
+
+        fireRateCost = monster.GetComponent<MonsterData>().levels[0].cost;
+        fireRateUpgradeData.GetComponent<TextMeshProUGUI>().text = "<b>Fire Rate (" + fireRateLevel + "): </b>\n\n" + Math.Round((1 / (monster.GetComponent<MonsterData>().CurrentLevel.fireRate)), 1) * 10 + " to " + Math.Round((1 / (monster.GetComponent<MonsterData>().CurrentLevel.fireRate * 0.83f))*10, 1);
+        fireRateUpgradeFor.GetComponent<TextMeshProUGUI>().text = "- $" + fireRateCost;
+        monster.GetComponent<MonsterData>().CurrentLevel.fireRate = monster.GetComponent<MonsterData>().levels[0].fireRate;
+
+        radius = monster.GetComponent<CircleCollider2D>().radius;
+        radiusCost = monster.GetComponent<MonsterData>().levels[0].cost;
+        radiusUpgradeData.GetComponent<TextMeshProUGUI>().text = "<b>Radius (" + radiusLevel + "): </b>\n\n" + radius * 10 + " to " + (radius + 0.1f)*10;
+        radiusUpgradeFor.GetComponent<TextMeshProUGUI>().text = "- $" + radiusCost;
+
     }
 
-    void Update()
+    public void damageUpgrade()
     {
-        if (!CanUpgradeMonster(monster))
+        if (gameManager.Gold >= damageCost)
         {
-            this.GetComponent<Button>().interactable = false;
+            damageLevel++;
+
+            gameManager.Gold -= damageCost;
+            monster.GetComponent<MonsterData>().CurrentLevel.damage += damageIncrease;
+            monster.GetComponent<MonsterData>().CurrentLevel.bullet.GetComponent<BulletBehavior>().damage += damageIncrease;
+            damageCost = Mathf.RoundToInt(damageCost * 2.1f);
+            monster.GetComponent<MonsterData>().setTotalCost(damageCost);
+            damageUpgradeData.GetComponent<TextMeshProUGUI>().text = "<b>Damage (" + damageLevel + "): </b>\n\n" + monster.GetComponent<MonsterData>().CurrentLevel.damage + " to " + (monster.GetComponent<MonsterData>().CurrentLevel.damage + damageIncrease);
+            damageUpgradeFor.GetComponent<TextMeshProUGUI>().text = "- $" + damageCost;
+
+            monster.GetComponent<MonsterData>().GetNextLevel().damage = monster.GetComponent<MonsterData>().CurrentLevel.damage;
+            monster.GetComponent<MonsterData>().GetNextLevel().bullet.GetComponent<BulletBehavior>().damage = monster.GetComponent<MonsterData>().CurrentLevel.bullet.GetComponent<BulletBehavior>().damage;
+            monster.GetComponent<MonsterData>().GetNextLevel().cost = damageCost;
+            monster.GetComponent<MonsterData>().GetNextLevel().fireRate = monster.GetComponent<MonsterData>().CurrentLevel.fireRate;
+            monster.GetComponent<MonsterData>().IncreaseLevel();
+        }
+    }
+
+    public void fireRateUpgrade()
+    {
+        if (gameManager.Gold >= fireRateCost)
+        {
+            fireRateLevel++;
+            gameManager.Gold -= fireRateCost;
+            monster.GetComponent<MonsterData>().CurrentLevel.fireRate *= 0.83f;
+            fireRateCost = Mathf.RoundToInt(fireRateCost * 2.3f);
+            fireRateUpgradeData.GetComponent<TextMeshProUGUI>().text = "<b>Fire Rate (" + fireRateLevel + "): </b>\n\n" + Math.Round(1 / (monster.GetComponent<MonsterData>().CurrentLevel.fireRate), 1) * 10 + " to " + Math.Round(1 / (monster.GetComponent<MonsterData>().CurrentLevel.fireRate * 0.83f), 1) * 10;
+            fireRateUpgradeFor.GetComponent<TextMeshProUGUI>().text = "- $" + fireRateCost;
+            monster.GetComponent<MonsterData>().setTotalCost(damageCost);
+
+            monster.GetComponent<MonsterData>().GetNextLevel().damage = monster.GetComponent<MonsterData>().CurrentLevel.damage;
+            monster.GetComponent<MonsterData>().GetNextLevel().cost = fireRateCost;
+            monster.GetComponent<MonsterData>().GetNextLevel().fireRate = monster.GetComponent<MonsterData>().CurrentLevel.fireRate;
+            monster.GetComponent<MonsterData>().IncreaseLevel();
+        }
+    }
+
+    public void radiusUpgrade()
+    {
+        if (gameManager.Gold >= radiusCost)
+        {
+            radiusLevel++;
+            gameManager.Gold -= radiusCost;
+            monster.GetComponent<CircleCollider2D>().radius += 0.32f;
+            radiusCost = Mathf.RoundToInt(radiusCost * 1.9f);
+            radiusUpgradeData.GetComponent<TextMeshProUGUI>().text = "<b>Radius (" + radiusLevel + "): </b>\n\n" + Math.Round(monster.GetComponent<CircleCollider2D>().radius, 1) * 10 + " to " + Math.Round(monster.GetComponent<CircleCollider2D>().radius + 0.32f, 1) * 10;
+            radiusUpgradeFor.GetComponent<TextMeshProUGUI>().text = "- $" + radiusCost;
+            monster.GetComponent<MonsterData>().GetNextLevel().damage = monster.GetComponent<MonsterData>().CurrentLevel.damage;
+            monster.GetComponent<MonsterData>().GetNextLevel().cost = radiusCost;
+            monster.GetComponent<MonsterData>().GetNextLevel().fireRate = monster.GetComponent<MonsterData>().CurrentLevel.fireRate;
+            monster.GetComponent<MonsterData>().IncreaseLevel();
+            monster.GetComponent<MonsterData>().setTotalCost(damageCost);
+        }
+
+    }
+
+    private void Update()
+    {
+
+        if (gameManager.Gold < damageCost)
+        {
+            damageButton.GetComponent<Button>().interactable = false;
         }
         else
         {
-            GetComponent<Button>().interactable = true;
+            damageButton.GetComponent<Button>().interactable = true;
         }
 
-        MonsterData monsterData = monster.GetComponent<MonsterData>();
-
-        MonsterLevel currentLevel = monsterData.CurrentLevel;
-        MonsterLevel nextLevel = monsterData.GetNextLevel();
-        string upgradeInfo = "<b>Damage:</b>\n" + currentLevel.damage + "   ->\n<b>Firerate:</b>\n" + System.Math.Round(1 / currentLevel.fireRate, 2) + "  ->\n";
-        string upgradeInfo2 = "\n" + nextLevel.damage + "\n\n" + System.Math.Round(1/nextLevel.fireRate, 2) + "";
-        UpgradeData.GetComponent<TextMeshProUGUI>().text = upgradeInfo;
-        UpgradeData2.GetComponent<TextMeshProUGUI>().text = upgradeInfo2;
-        UpgradeforObj.GetComponent<TextMeshProUGUI>().text = "- " + monster.GetComponent<MonsterData>().GetNextLevel().cost.ToString() + " Gold";
-
-        currentLevel.bullet.GetComponent<BulletBehavior>().setDamage(currentLevel.damage);
-        currentLevel.bullet.GetComponent<BulletBehavior>().setSpeed(currentLevel.speed);
-    }
-
-
-    public void OnButtonClick()
-    {
-        if (CanUpgradeMonster(monster)) { 
-            monster.GetComponent<MonsterData>().IncreaseLevel();
-            gameManager.Gold -= monster.GetComponent<MonsterData>().CurrentLevel.cost;
-        }
-    }
-
-    private bool CanUpgradeMonster(GameObject monsterToUpgrade)
-    {
-        MonsterData monsterData = monsterToUpgrade.GetComponent<MonsterData>();
-        MonsterLevel nextLevel = monsterData.GetNextLevel();
-        if (nextLevel != null)
+        if (gameManager.Gold < fireRateCost)
         {
-            return gameManager.Gold >= nextLevel.cost;
+            fireRateButton.GetComponent<Button>().interactable = false;
         }
-        return false;
-    }
+        else
+        {
+            fireRateButton.GetComponent<Button>().interactable = true;
+        }
 
+        if (gameManager.Gold < radiusCost)
+        {
+            radiusButton.GetComponent<Button>().interactable = false;
+        }
+        else
+        {
+            radiusButton.GetComponent<Button>().interactable = true;
+        }
+
+        if (damageLevel > 1 && radiusLevel > 1)
+        {
+            fireRateButton.GetComponentInChildren<TextMeshProUGUI>().text = "<u><b>Locked</u></b>";
+            fireRateButton.GetComponent<Button>().interactable = false;
+            fireRateButton.GetComponent<Image>().sprite = null;
+            fireRateButton.GetComponent<Image>().color = new Color(0, 0, 0, 0);
+            fireRateUpgradeData.GetComponent<TextMeshProUGUI>().text = "<b>Fire Rate (" + fireRateLevel + "): </b>\n\n" + Math.Round(1 / (monster.GetComponent<MonsterData>().CurrentLevel.fireRate), 1) * 10;
+            fireRateUpgradeFor.GetComponent<TextMeshProUGUI>().text = "";
+        }
+
+        if (damageLevel > 1 && fireRateLevel > 1)
+        {
+            radiusButton.GetComponentInChildren<TextMeshProUGUI>().text = "<u><b>Locked</u></b>";
+            radiusButton.GetComponent<Button>().interactable = false;
+            radiusButton.GetComponent<Image>().sprite = null;
+            radiusButton.GetComponent<Image>().color = new Color(0, 0, 0, 0);
+            radiusUpgradeData.GetComponent<TextMeshProUGUI>().text = "<b>Radius (" + radiusLevel + "): </b>\n\n" + Math.Round(monster.GetComponent<CircleCollider2D>().radius, 1) * 10;
+            radiusUpgradeFor.GetComponent<TextMeshProUGUI>().text = "";
+        }
+
+        if (fireRateLevel > 1 && radiusLevel > 1)
+        {
+            damageButton.GetComponentInChildren<TextMeshProUGUI>().text = "<u><b>Locked</u></b>";
+            damageButton.GetComponent<Button>().interactable = false;
+            damageButton.GetComponent<Image>().sprite = null;
+            damageButton.GetComponent<Image>().color = new Color(0, 0, 0, 0);
+            damageUpgradeData.GetComponent<TextMeshProUGUI>().text = "<b>Damage (" + damageLevel + "): </b>\n\n" + monster.GetComponent<MonsterData>().CurrentLevel.damage;
+            damageUpgradeFor.GetComponent<TextMeshProUGUI>().text = "";
+        }
+
+        int totalUpgrades = damageLevel + fireRateLevel + radiusLevel;
+
+        if (totalUpgrades >= 12)
+        {
+            damageButton.GetComponentInChildren<TextMeshProUGUI>().text = "-";
+            damageButton.GetComponent<Button>().interactable = false;
+            fireRateButton.GetComponentInChildren<TextMeshProUGUI>().text = "-";
+            fireRateButton.GetComponent<Button>().interactable = false;
+            radiusButton.GetComponentInChildren<TextMeshProUGUI>().text = "-";
+            radiusButton.GetComponent<Button>().interactable = false;
+
+            radiusUpgradeData.GetComponent<TextMeshProUGUI>().text = "<b>Radius (" + radiusLevel + "): </b>\n\n" + Math.Round(monster.GetComponent<CircleCollider2D>().radius, 1) * 10;
+            radiusUpgradeFor.GetComponent<TextMeshProUGUI>().text = "";
+            fireRateUpgradeData.GetComponent<TextMeshProUGUI>().text = "<b>Fire Rate (" + fireRateLevel + "): </b>\n\n" + Math.Round(1 / (monster.GetComponent<MonsterData>().CurrentLevel.fireRate), 1) * 10;
+            fireRateUpgradeFor.GetComponent<TextMeshProUGUI>().text = "";
+            damageUpgradeData.GetComponent<TextMeshProUGUI>().text = "<b>Damage (" + damageLevel + "): </b>\n\n" + monster.GetComponent<MonsterData>().CurrentLevel.damage;
+            damageUpgradeFor.GetComponent<TextMeshProUGUI>().text = "";
+        }
+    }
 }

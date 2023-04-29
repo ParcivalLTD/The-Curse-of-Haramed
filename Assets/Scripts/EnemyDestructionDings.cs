@@ -8,11 +8,14 @@ public class EnemyDestructionDings : MonoBehaviour
     public delegate void EnemyDelegate(GameObject enemy);
     public EnemyDelegate enemyDelegate;
     private GameManagerBehavior gameManager;
+    public int cursorDamage;
+    public GameObject Upgrade;
 
     void Start()
     {
         GameObject gm = GameObject.Find("GameManager");
         gameManager = gm.GetComponent<GameManagerBehavior>();
+        cursorDamage = GameObject.Find("Upgrades").gameObject.GetComponent<miscUpgrades>().cursorDamage;
     }
 
     void Update()
@@ -24,7 +27,7 @@ public class EnemyDestructionDings : MonoBehaviour
     {
         HealthBar healthBar =
                     gameObject.transform.Find("HealthBar").gameObject.GetComponent<HealthBar>();
-        healthBar.currentHealth -= Mathf.Max(1, 0);
+        healthBar.currentHealth -= Mathf.Max(cursorDamage, 0);
         if (healthBar.currentHealth <= 0)
         {
             Destroy(gameObject);
