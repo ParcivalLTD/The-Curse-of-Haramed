@@ -51,9 +51,16 @@ public class PlaceMonster : MonoBehaviour
                 }
                 else if (Input.GetKeyDown(KeyCode.Alpha3))
                 {
-                    if (gameManager.Wave >= 1)
+                    if (gameManager.Wave >= 19)
                     {
                         PlaceMonsterAtIndex(2);
+                    }
+                }
+                else if (Input.GetKeyDown(KeyCode.Alpha4))
+                {
+                    if (gameManager.Wave >= 29)
+                    {
+                        PlaceMonsterAtIndex(3);
                     }
                 }
             }
@@ -70,15 +77,19 @@ public class PlaceMonster : MonoBehaviour
             if (canvasIsShown && canvas != null)
         {
             canvas.SetActive(true);
-            canvas.transform.Find("circle").gameObject.SetActive(true);
-            canvas.transform.Find("circle").position = monster.transform.position;
-            float radius = monster.GetComponent<CircleCollider2D>().radius;
-            canvas.transform.Find("circle").localScale = new Vector3(radius, radius, radius);
+            if (monster.gameObject.GetComponent<MonsterData>().nameOfMonster != "Platapus")
+            {
+                canvas.transform.Find("circle").gameObject.SetActive(true);
+                canvas.transform.Find("circle").position = monster.transform.position;
+                float radius = monster.GetComponent<CircleCollider2D>().radius;
+                canvas.transform.Find("circle").localScale = new Vector3(radius, radius, radius);
+            }
+
         }
         else if (canvasIsShown == false && canvas != null)
         {
             canvas.SetActive(false);
-            if (monster.transform.name != "Platapus")
+            if (monster.gameObject.GetComponent<MonsterData>().nameOfMonster != "Platapus")
             {
             canvas.transform.Find("circle").gameObject.SetActive(false);
             canvas.transform.Find("circle").position = monster.transform.position;
@@ -116,6 +127,7 @@ public class PlaceMonster : MonoBehaviour
     public void hideOtherCanvases()
     {
         GameObject[] openspots = GameObject.FindGameObjectsWithTag("Openspot");
+        GameObject.Find("Upgrades").GetComponent<miscUpgrades>().panel.SetActive(false);
         foreach (GameObject openspot in openspots)
         {
             if (openspot != this.gameObject)
@@ -144,10 +156,14 @@ public class PlaceMonster : MonoBehaviour
             gameManager.Gold -= monster.GetComponent<MonsterData>().CurrentLevel.cost;
             canvasIsShown = true;
             canvas = monster.transform.Find(canvasName).gameObject;
-            canvas.transform.Find("circle").gameObject.SetActive(true);
-            canvas.transform.Find("circle").position = monster.transform.position;
-            float radius = monster.GetComponent<CircleCollider2D>().radius;
-            canvas.transform.Find("circle").localScale = new Vector3(radius, radius, radius);
+            if(monster.gameObject.GetComponent<MonsterData>().nameOfMonster != "Platapus")
+            {
+                canvas.transform.Find("circle").gameObject.SetActive(true);
+                canvas.transform.Find("circle").position = monster.transform.position;
+                float radius = monster.GetComponent<CircleCollider2D>().radius;
+                canvas.transform.Find("circle").localScale = new Vector3(radius, radius, radius);
+            }
+
             hideOtherCanvases();
         }
     }

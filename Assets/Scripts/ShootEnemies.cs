@@ -23,37 +23,58 @@ public class ShootEnemies : MonoBehaviour
 
     void Update()
     {
-        GameObject target = null;
-        float minimalEnemyDistance = float.MaxValue;
-        foreach (GameObject enemy in enemiesInRange)
-        {
-            float distanceToGoal = enemy.GetComponent<MoveEnemy>().DistanceToGoal();
-            if (distanceToGoal < minimalEnemyDistance)
-            {
-                target = enemy;
-                minimalEnemyDistance = distanceToGoal;
-            }
-        }
-        
-        if (target != null)
+        if (monsterData.nameOfMonster == "Frog")
         {
             if (Time.time - lastShotTime > monsterData.CurrentLevel.fireRate)
             {
-                Shoot(target.GetComponent<Collider2D>());
+                foreach (GameObject enemy in enemiesInRange)
+                {
+                    Shoot(enemy.GetComponent<Collider2D>());
+                }
                 lastShotTime = Time.time;
                 float damage = bulletPrefab.gameObject.GetComponent<BulletBehavior>().damage;
                 int totalDamageInt = int.Parse(damageDealt.GetComponent<TextMeshProUGUI>().text);
-                totalDamageInt += (int)damage;
+                totalDamageInt += (int)(damage * enemiesInRange.Count);
                 damageDealt.GetComponent<TextMeshProUGUI>().text = totalDamageInt.ToString();
             }
-
-            Vector3 direction = gameObject.transform.position - target.transform.position;
-            gameObject.transform.rotation = Quaternion.AngleAxis(
-                Mathf.Atan2(direction.y, direction.x) * 180 / Mathf.PI,
-                new Vector3(0, 0, 1));
         }
+        else
+        {
+            GameObject target = null;
+            float minimalEnemyDistance = float.MaxValue;
+            foreach (GameObject enemy in enemiesInRange)
+            {
+                float distanceToGoal = enemy.GetComponent<MoveEnemy>().DistanceToGoal();
+                if (distanceToGoal < minimalEnemyDistance)
+                {
+                    target = enemy;
+                    minimalEnemyDistance = distanceToGoal;
+                }
+            }
 
+            if (target != null)
+            {
+                if (Time.time - lastShotTime > monsterData.CurrentLevel.fireRate)
+                {
+                    Shoot(target.GetComponent<Collider2D>());
+                    lastShotTime = Time.time;
+                    float damage = bulletPrefab.gameObject.GetComponent<BulletBehavior>().damage;
+                    int totalDamageInt = int.Parse(damageDealt.GetComponent<TextMeshProUGUI>().text);
+                    totalDamageInt += (int)damage;
+                    damageDealt.GetComponent<TextMeshProUGUI>().text = totalDamageInt.ToString();
+                }
+
+                if (monsterData.nameOfMonster != "Gorilla")
+                {
+                    Vector3 direction = gameObject.transform.position - target.transform.position;
+                    gameObject.transform.rotation = Quaternion.AngleAxis(
+                        Mathf.Atan2(direction.y, direction.x) * 180 / Mathf.PI,
+                        new Vector3(0, 0, 1));
+                }
+            }
+        }
     }
+
 
     void OnEnemyDestroy(GameObject enemy)
     {

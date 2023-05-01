@@ -11,6 +11,7 @@ public class BulletBehavior : MonoBehaviour
     public Vector3 targetPosition;
     private float distance;
     private float startTime;
+    public GameObject GemPrefab;
     private GameManagerBehavior gameManager;
 
     public void setDamage(int damage1)
@@ -50,9 +51,17 @@ public class BulletBehavior : MonoBehaviour
                     Destroy(target);
 
                     gameManager.Gold += (int) healthBar.maxHealth / 2;
+
+                    if (Random.value < 0.1)
+                    {
+                        GameObject gem = Instantiate(GemPrefab, transform.position, Quaternion.identity);
+                        gem.transform.parent = GameObject.Find("GemsContainer").transform;
+                        Destroy(gem, 3);
+                    }
+
                 }
 
-                
+
             }
             Destroy(gameObject);
         }

@@ -11,14 +11,10 @@ public class Startscreen : MonoBehaviour
     {
         Screen.SetResolution(1920, 1080, true);
         Screen.fullScreen = true;
+        audioSource.Play();
     }
 
     void Update()
     {
-        if (Input.anyKeyDown)
-        {
-            audioSource.Play();
-            SceneManager.LoadScene("GameScene");
-        }
     }
 }

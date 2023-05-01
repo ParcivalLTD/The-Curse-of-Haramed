@@ -31,10 +31,31 @@ public class SpawnEnemy : MonoBehaviour
         lastSpawnTime = Time.time;
         gameManager = GameObject.Find("GameManager").GetComponent<GameManagerBehavior>();
 
+        foreach (GameObject icon in monsterIcons)
+        {
+            icon.SetActive(false);
+        }
     }
 
     void Update()
     {
+        if (gameManager.Wave >= 0)
+        {
+            monsterIcons[0].SetActive(true);
+        }
+        if (gameManager.Wave >= 9)
+        {
+            monsterIcons[1].SetActive(true);
+        }
+        if (gameManager.Wave >= 19)
+        {
+            monsterIcons[2].SetActive(true);
+        }
+        if (gameManager.Wave >= 29)
+        {
+            monsterIcons[3].SetActive(true);
+        }
+
         int currentWave = gameManager.Wave;
         if (currentWave < waves.Length)
         {
@@ -58,10 +79,6 @@ public class SpawnEnemy : MonoBehaviour
                 gameManager.Gold = Mathf.RoundToInt(gameManager.Gold + goldperWave);
                 enemiesSpawned = 0;
                 lastSpawnTime = Time.time;
-                if (gameManager.Wave == 9)
-                {
-                    monsterIcons[1].SetActive(true);
-                }
             }
         }
         else
@@ -84,7 +101,11 @@ public class SpawnEnemy : MonoBehaviour
             }
             else if (icon.name == "gorilla0")
             {
-                monsterCost = 800;
+                monsterCost = 850;
+            }
+            else if (icon.name == "frog0")
+            {
+                monsterCost = 1300;
             }
             else
             {

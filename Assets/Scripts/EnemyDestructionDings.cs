@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public class EnemyDestructionDings : MonoBehaviour
 {
@@ -9,18 +8,17 @@ public class EnemyDestructionDings : MonoBehaviour
     public EnemyDelegate enemyDelegate;
     private GameManagerBehavior gameManager;
     public int cursorDamage;
-    public GameObject Upgrade;
+    public GameObject GemPrefab;
 
     void Start()
     {
         GameObject gm = GameObject.Find("GameManager");
         gameManager = gm.GetComponent<GameManagerBehavior>();
-        cursorDamage = GameObject.Find("Upgrades").gameObject.GetComponent<miscUpgrades>().cursorDamage;
     }
 
     void Update()
     {
-        
+        cursorDamage = GameObject.Find("Upgrades").gameObject.GetComponent<miscUpgrades>().cursorDamage;
     }
 
     private void OnMouseDown()
@@ -33,6 +31,12 @@ public class EnemyDestructionDings : MonoBehaviour
             Destroy(gameObject);
 
             gameManager.Gold += (int)healthBar.maxHealth / 2;
+
+            if (Random.value < 0.1)
+            {
+                GameObject gem = Instantiate(GemPrefab, transform.position, Quaternion.identity);
+                Destroy(gem, 3);
+            }
         }
     }
 
@@ -43,5 +47,4 @@ public class EnemyDestructionDings : MonoBehaviour
             enemyDelegate(gameObject);
         }
     }
-
 }

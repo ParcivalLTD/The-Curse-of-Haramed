@@ -1,10 +1,8 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
 
 public class GameManagerBehavior : MonoBehaviour
 {
-
     public Text goldLabel;
     private int gold;
     public Text waveLabel;
@@ -16,6 +14,8 @@ public class GameManagerBehavior : MonoBehaviour
     private int health;
     public bool canvasIsShown = false;
     private static Vector3 savedPosition;
+    private int gems;
+    public Text gemsLabel;
     public int Health
     {
         get
@@ -59,17 +59,17 @@ public class GameManagerBehavior : MonoBehaviour
 
     public float GetSavedPosition(int x)
     {
-        if(x == 0)
+        if (x == 0)
         {
             return savedPosition.x;
-        } else if(x == 1) { return savedPosition.y; }
-        else if(x == 2) {  return savedPosition.z; }
+        }
+        else if (x == 1) { return savedPosition.y; }
+        else if (x == 2) { return savedPosition.z; }
         else
         {
             return 0;
         }
     }
-
 
     public int Wave
     {
@@ -91,8 +91,6 @@ public class GameManagerBehavior : MonoBehaviour
         }
     }
 
-    
-
     public int Gold
     {
         get
@@ -106,11 +104,25 @@ public class GameManagerBehavior : MonoBehaviour
         }
     }
 
+    public int Gems
+    {
+        get
+        {
+            return gems;
+        }
+        set
+        {
+            gems = value;
+            gemsLabel.GetComponent<Text>().text = gems.ToString();
+        }
+    }
+
     void Start()
     {
         Gold = 1000;
         Wave = 0;
         Health = 5;
+        Gems = 10;
         GameObject[] monsters = GameObject.FindGameObjectsWithTag("Monster");
         foreach (GameObject monster in monsters)
         {

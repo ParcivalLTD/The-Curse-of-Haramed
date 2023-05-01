@@ -35,6 +35,11 @@ public class UpgradeButton : MonoBehaviour
 
     public float radius;
 
+    public float fireRateMultiplier = 0.83f;
+    public float radiusMultiplier = 0.1f;
+    public int damageMultiplier = 7;
+
+
     void Start()
     {
         monster = transform.parent.parent.parent.gameObject;
@@ -119,7 +124,6 @@ public class UpgradeButton : MonoBehaviour
 
     private void Update()
     {
-
         if (gameManager.Gold < damageCost)
         {
             damageButton.GetComponent<Button>().interactable = false;
