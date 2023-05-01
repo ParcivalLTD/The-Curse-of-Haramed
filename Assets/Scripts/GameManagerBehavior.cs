@@ -16,6 +16,8 @@ public class GameManagerBehavior : MonoBehaviour
     private static Vector3 savedPosition;
     private int gems;
     public Text gemsLabel;
+    public bool goldenHogObtained = false;
+
     public int Health
     {
         get
@@ -99,6 +101,10 @@ public class GameManagerBehavior : MonoBehaviour
         }
         set
         {
+            if (goldenHogObtained && value > 0)
+            {
+                value = (int)(value * 1.1f);
+            }
             gold = value;
             goldLabel.GetComponent<Text>().text = "$" + gold;
         }
@@ -119,10 +125,11 @@ public class GameManagerBehavior : MonoBehaviour
 
     void Start()
     {
+
         Gold = 1000;
         Wave = 0;
         Health = 5;
-        Gems = 10;
+        Gems = 0;
         GameObject[] monsters = GameObject.FindGameObjectsWithTag("Monster");
         foreach (GameObject monster in monsters)
         {

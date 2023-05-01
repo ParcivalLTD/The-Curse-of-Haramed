@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -11,19 +12,109 @@ public class pausegame : MonoBehaviour
     public Sprite pausedSprite;
     public Sprite normalSprite;
     public GameObject pauseOverlay;
-    public GameObject volumeSlider;
+
+    public Toggle fullscreenToggle;
+    public Slider sfxSlider;
+    public Slider musicSlider;
+    public Toggle sfxMuteToggle;
+    public Toggle musicMuteToggle;
+    public GameObject trackNameObj;
+
+    // Settings variables
+    private bool isFullscreen;
+    private float sfxVolume;
+    private float musicVolume;
+    private bool isSfxMuted;
+    private bool isMusicMuted;
+
+    public GameObject pauseOverlayBackground;
+
+    public void Update()
+    {
+        trackNameObj.GetComponent<TextMeshProUGUI>().text = GameObject.FindGameObjectWithTag("Music").GetComponent<MusicPlayer>().GetCurrentTrackName();
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+           TogglePause();
+        }
+    }
 
     void Start()
     {
         pauseImage = transform.Find("pauseImage").gameObject;
         pauseOverlay.SetActive(false);
-        volumeSlider.GetComponent<Slider>().value = AudioListener.volume;
+
+        isFullscreen = PlayerPrefs.GetInt("isFullscreen", 1) == 1 ? true : false;
+        sfxVolume = PlayerPrefs.GetFloat("sfxVolume", 1f);
+        musicVolume = PlayerPrefs.GetFloat("musicVolume", 1f);
+        isSfxMuted = PlayerPrefs.GetInt("isSfxMuted", 0) == 1 ? true : false;
+        isMusicMuted = PlayerPrefs.GetInt("isMusicMuted", 0) == 1 ? true : false;
+
+        fullscreenToggle.isOn = isFullscreen;
+
+        sfxSlider.value = sfxVolume;
+        musicSlider.value = musicVolume;
+        sfxMuteToggle.isOn = isSfxMuted;
+        musicMuteToggle.isOn = isMusicMuted;
+
+        ApplySettings();
+    }
+
+    private void ApplySettings()
+    {
+        Screen.fullScreen = isFullscreen;
+
+        AudioListener.volume = isSfxMuted ? 0f : sfxVolume;
+
+        GameObject.FindGameObjectWithTag("Music").GetComponent<AudioSource>().volume = isMusicMuted ? 0f : musicVolume;
+    }
+
+    private void SaveSettings()
+    {
+        PlayerPrefs.SetInt("isFullscreen", isFullscreen ? 1 : 0);
+        PlayerPrefs.SetFloat("sfxVolume", sfxVolume);
+        PlayerPrefs.SetFloat("musicVolume", musicVolume);
+        PlayerPrefs.SetInt("isSfxMuted", isSfxMuted ? 1 : 0);
+        PlayerPrefs.SetInt("isMusicMuted", isMusicMuted ? 1 : 0);
+        PlayerPrefs.Save();
+    }
+    public void ToggleFullscreen()
+    {
+        isFullscreen = fullscreenToggle.isOn;
+        ApplySettings();
+        SaveSettings();
+    }
+
+    public void exitGame()
+    {
+        Application.Quit();
+    }
+
+    public void SetSfxVolume()
+    {
+        sfxVolume = sfxSlider.value;
+        isSfxMuted = sfxMuteToggle.isOn;
+        ApplySettings();
+        SaveSettings();
+    }
+
+    public void SetMusicVolume()
+    {
+        musicVolume = musicSlider.value;
+        isMusicMuted = musicMuteToggle.isOn;
+        ApplySettings();
+        SaveSettings();
     }
 
     public void TogglePause()
     {
         isPaused = !isPaused;
 
+        if(SceneManager.GetActiveScene().name == "Gamescene")
+        {
+            bool is2xSpeed = GameObject.Find("Speed").GetComponent<speedScript>().isTwoXSpeed;
+        }
+        
         if (isPaused)
         {
             Time.timeScale = 0f;
@@ -32,15 +123,22 @@ public class pausegame : MonoBehaviour
         }
         else
         {
-            Time.timeScale = 1f;
+            if (SceneManager.GetActiveScene().name == "Gamescene")
+            {
+                bool is2xSpeed = GameObject.Find("Speed").GetComponent<speedScript>().isTwoXSpeed;
+
+                if (is2xSpeed)
+                {
+                    Time.timeScale = 2f;
+                }
+                else
+                {
+                    Time.timeScale = 1f;
+                }
+            }
             pauseImage.GetComponent<Image>().sprite = normalSprite;
             pauseOverlay.SetActive(false);
         }
-    }
-
-    public void SetVolume()
-    {
-        AudioListener.volume = volumeSlider.GetComponent<Slider>().value;
     }
 
     public void ReturnToMenu()

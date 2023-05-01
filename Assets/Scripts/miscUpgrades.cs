@@ -135,7 +135,7 @@ public class miscUpgrades : MonoBehaviour
             goldenHogUpgradeButton.transform.Find("text").gameObject.SetActive(false);
             goldenHogBought = true;
 
-            //increase income by 10%
+            //gameManager.goldenHogObtained = true;
         }
     }
 

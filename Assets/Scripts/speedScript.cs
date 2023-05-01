@@ -9,11 +9,19 @@ public class speedScript : MonoBehaviour
     public Sprite normalImage;
     public Sprite twoXImage;
 
-    private bool isTwoXSpeed = false;
+    public bool isTwoXSpeed = false;
 
     public void Start()
     {
         buttonImage = GetComponent<Image>();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            ToggleSpeed();
+        }
     }
 
     public void ToggleSpeed()
