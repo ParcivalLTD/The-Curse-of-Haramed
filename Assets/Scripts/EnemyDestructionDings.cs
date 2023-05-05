@@ -10,6 +10,8 @@ public class EnemyDestructionDings : MonoBehaviour
     public int cursorDamage;
     public GameObject GemPrefab;
 
+    public List<GameObject> Enemies = new List<GameObject>();
+
     void Start()
     {
         GameObject gm = GameObject.Find("GameManager");
@@ -45,6 +47,10 @@ public class EnemyDestructionDings : MonoBehaviour
         if (enemyDelegate != null)
         {
             enemyDelegate(gameObject);
+
+
         }
+        //Instantiate(Enemies[Random.Range(0, Enemies.Count)], transform.position, Quaternion.identity);
+
     }
 }

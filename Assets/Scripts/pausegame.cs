@@ -29,6 +29,11 @@ public class pausegame : MonoBehaviour
 
     public GameObject pauseOverlayBackground;
 
+    public bool getFullscreenBool()
+    {
+        return isFullscreen;
+    }
+
     public void Update()
     {
         trackNameObj.GetComponent<TextMeshProUGUI>().text = GameObject.FindGameObjectWithTag("Music").GetComponent<MusicPlayer>().GetCurrentTrackName();
@@ -44,7 +49,16 @@ public class pausegame : MonoBehaviour
         pauseImage = transform.Find("pauseImage").gameObject;
         pauseOverlay.SetActive(false);
 
-        isFullscreen = PlayerPrefs.GetInt("isFullscreen", 1) == 1 ? true : false;
+        if (!PlayerPrefs.HasKey("isFullscreen"))
+        {
+            PlayerPrefs.SetInt("isFullscreen", 1);
+            isFullscreen = true;
+        }
+        else
+        {
+            isFullscreen = PlayerPrefs.GetInt("isFullscreen", 1) == 1 ? true : false;
+        }
+
         sfxVolume = PlayerPrefs.GetFloat("sfxVolume", 1f);
         musicVolume = PlayerPrefs.GetFloat("musicVolume", 1f);
         isSfxMuted = PlayerPrefs.GetInt("isSfxMuted", 0) == 1 ? true : false;
@@ -60,6 +74,7 @@ public class pausegame : MonoBehaviour
         ApplySettings();
     }
 
+
     private void ApplySettings()
     {
         Screen.fullScreen = isFullscreen;
@@ -67,6 +82,9 @@ public class pausegame : MonoBehaviour
         AudioListener.volume = isSfxMuted ? 0f : sfxVolume;
 
         GameObject.FindGameObjectWithTag("Music").GetComponent<AudioSource>().volume = isMusicMuted ? 0f : musicVolume;
+
+        isFullscreen = PlayerPrefs.GetInt("isFullscreen", 1) == 1 ? true : false;
+        Screen.fullScreen = isFullscreen;
     }
 
     private void SaveSettings()
@@ -81,7 +99,7 @@ public class pausegame : MonoBehaviour
     public void ToggleFullscreen()
     {
         isFullscreen = fullscreenToggle.isOn;
-        ApplySettings();
+        Screen.fullScreen = isFullscreen;
         SaveSettings();
     }
 
@@ -89,6 +107,12 @@ public class pausegame : MonoBehaviour
     {
         Application.Quit();
     }
+
+    void OnApplicationQuit()
+    {
+        SaveSettings();
+    }
+
 
     public void SetSfxVolume()
     {
@@ -110,7 +134,7 @@ public class pausegame : MonoBehaviour
     {
         isPaused = !isPaused;
 
-        if(SceneManager.GetActiveScene().name == "Gamescene")
+        if(SceneManager.GetActiveScene().name == "GameScene")
         {
             bool is2xSpeed = GameObject.Find("Speed").GetComponent<speedScript>().isTwoXSpeed;
         }
@@ -123,7 +147,7 @@ public class pausegame : MonoBehaviour
         }
         else
         {
-            if (SceneManager.GetActiveScene().name == "Gamescene")
+            if (SceneManager.GetActiveScene().name == "GameScene")
             {
                 bool is2xSpeed = GameObject.Find("Speed").GetComponent<speedScript>().isTwoXSpeed;
 

@@ -68,10 +68,17 @@ public class PlaceMonster : MonoBehaviour
 
         if (Input.GetMouseButtonDown(1) && monster != null)
         {
-            int refundAmount = (int)(monster.GetComponent<MonsterData>().CurrentLevel.cost * 0.7f);
-            gameManager.Gold += refundAmount;
-            Destroy(monster);
-            monster.transform.Find("panel").gameObject.SetActive(false);
+            RaycastHit2D hit2 = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+            if (hit2.collider != null)
+            {
+                GameObject hoveredObject = hit2.collider.gameObject;
+                if (hoveredObject.tag == "Openspot" && hoveredObject == this.gameObject)
+                {
+                    int refundAmount = (int)(monster.GetComponent<MonsterData>().CurrentLevel.cost * 0.7f);
+                    gameManager.Gold += refundAmount;
+                    Destroy(monster);
+                }
+            }
         }
 
             if (canvasIsShown && canvas != null)
