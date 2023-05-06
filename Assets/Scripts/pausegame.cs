@@ -21,7 +21,7 @@ public class pausegame : MonoBehaviour
     public GameObject trackNameObj;
 
     // Settings variables
-    private bool isFullscreen;
+    public bool isFullscreen;
     private float sfxVolume;
     private float musicVolume;
     private bool isSfxMuted;
@@ -38,10 +38,14 @@ public class pausegame : MonoBehaviour
     {
         trackNameObj.GetComponent<TextMeshProUGUI>().text = GameObject.FindGameObjectWithTag("Music").GetComponent<MusicPlayer>().GetCurrentTrackName();
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (isPaused)
         {
-           TogglePause();
+            if (Input.anyKeyDown && !Input.GetMouseButton(0) && !Input.GetMouseButtonDown(0) && !Input.GetMouseButtonUp(0) && !Input.GetMouseButtonDown(1) && !Input.GetMouseButton(1) && !Input.GetMouseButtonUp(1))
+            {
+                TogglePause();
+            }
         }
+
     }
 
     void Start()
@@ -134,7 +138,7 @@ public class pausegame : MonoBehaviour
     {
         isPaused = !isPaused;
 
-        if(SceneManager.GetActiveScene().name == "GameScene")
+        if (SceneManager.GetActiveScene().name == "GameScene")
         {
             bool is2xSpeed = GameObject.Find("Speed").GetComponent<speedScript>().isTwoXSpeed;
         }

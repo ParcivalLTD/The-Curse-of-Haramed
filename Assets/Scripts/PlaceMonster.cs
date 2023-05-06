@@ -77,6 +77,7 @@ public class PlaceMonster : MonoBehaviour
                     int refundAmount = (int)(monster.GetComponent<MonsterData>().CurrentLevel.cost * 0.7f);
                     gameManager.Gold += refundAmount;
                     Destroy(monster);
+                    GameObject.FindGameObjectWithTag("Sound").gameObject.GetComponent<SoundManager>().PlaySoundEffect(8);
                 }
             }
         }
@@ -111,6 +112,7 @@ public class PlaceMonster : MonoBehaviour
         if (monster != null)
         {
             canvas = monster.transform.Find(canvasName).gameObject;
+            GameObject.FindGameObjectWithTag("Sound").gameObject.GetComponent<SoundManager>().PlaySoundEffect(0);
 
             if (canvasIsShown)
             {
@@ -135,6 +137,7 @@ public class PlaceMonster : MonoBehaviour
     {
         GameObject[] openspots = GameObject.FindGameObjectsWithTag("Openspot");
         GameObject.Find("Upgrades").GetComponent<miscUpgrades>().panel.SetActive(false);
+        GameObject.Find("Upgrades").GetComponent<miscUpgrades>().setButtonImage();
         foreach (GameObject openspot in openspots)
         {
             if (openspot != this.gameObject)
@@ -149,6 +152,8 @@ public class PlaceMonster : MonoBehaviour
     {
         Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mousePosition.z = 0;
+
+        GameObject.FindGameObjectWithTag("Sound").gameObject.GetComponent<SoundManager>().PlaySoundEffect(10);
 
         RaycastHit2D hit = Physics2D.Raycast(mousePosition, Vector2.zero);
         GameObject selectedObject = hit.collider.gameObject;

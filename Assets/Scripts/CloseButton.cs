@@ -27,6 +27,7 @@ public class CloseButton : MonoBehaviour
                 openspot.GetComponent<PlaceMonster>().HideCanvas();
             }
         }
+        GameObject.FindGameObjectWithTag("Sound").gameObject.GetComponent<SoundManager>().PlaySoundEffect(1);
     }
 
 }

@@ -66,6 +66,8 @@ public class UpgradeButton : MonoBehaviour
     {
         if (gameManager.Gold >= damageCost)
         {
+            GameObject.FindGameObjectWithTag("Sound").gameObject.GetComponent<SoundManager>().PlaySoundEffect(0);
+
             damageLevel++;
 
             gameManager.Gold -= damageCost;
@@ -82,12 +84,18 @@ public class UpgradeButton : MonoBehaviour
             monster.GetComponent<MonsterData>().GetNextLevel().fireRate = monster.GetComponent<MonsterData>().CurrentLevel.fireRate;
             monster.GetComponent<MonsterData>().IncreaseLevel();
         }
+        else
+        {
+            GameObject.FindGameObjectWithTag("Sound").gameObject.GetComponent<SoundManager>().PlaySoundEffect(10);
+        }
     }
 
     public void fireRateUpgrade()
     {
         if (gameManager.Gold >= fireRateCost)
         {
+            GameObject.FindGameObjectWithTag("Sound").gameObject.GetComponent<SoundManager>().PlaySoundEffect(0);
+
             fireRateLevel++;
             gameManager.Gold -= fireRateCost;
             monster.GetComponent<MonsterData>().CurrentLevel.fireRate *= 0.83f;
@@ -100,6 +108,9 @@ public class UpgradeButton : MonoBehaviour
             monster.GetComponent<MonsterData>().GetNextLevel().cost = fireRateCost;
             monster.GetComponent<MonsterData>().GetNextLevel().fireRate = monster.GetComponent<MonsterData>().CurrentLevel.fireRate;
             monster.GetComponent<MonsterData>().IncreaseLevel();
+        } else
+        {
+            GameObject.FindGameObjectWithTag("Sound").gameObject.GetComponent<SoundManager>().PlaySoundEffect(10);
         }
     }
 
@@ -107,6 +118,8 @@ public class UpgradeButton : MonoBehaviour
     {
         if (gameManager.Gold >= radiusCost)
         {
+            GameObject.FindGameObjectWithTag("Sound").gameObject.GetComponent<SoundManager>().PlaySoundEffect(0);
+
             radiusLevel++;
             gameManager.Gold -= radiusCost;
             monster.GetComponent<CircleCollider2D>().radius += 0.32f;
@@ -118,6 +131,10 @@ public class UpgradeButton : MonoBehaviour
             monster.GetComponent<MonsterData>().GetNextLevel().fireRate = monster.GetComponent<MonsterData>().CurrentLevel.fireRate;
             monster.GetComponent<MonsterData>().IncreaseLevel();
             monster.GetComponent<MonsterData>().setTotalCost(damageCost);
+        }
+        else
+        {
+            GameObject.FindGameObjectWithTag("Sound").gameObject.GetComponent<SoundManager>().PlaySoundEffect(10);
         }
 
     }

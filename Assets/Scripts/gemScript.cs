@@ -22,6 +22,8 @@ public class gemScript : MonoBehaviour
             {
                 Destroy(gameObject);
                 gameManager.Gems += 1;
+                //GameObject.Find("SoundManager").GetComponent<SoundManager>().PlaySoundEffect(0);
+                GameObject.FindGameObjectWithTag("Sound").gameObject.GetComponent<SoundManager>().PlaySoundEffect(5);
             }
         }
     }

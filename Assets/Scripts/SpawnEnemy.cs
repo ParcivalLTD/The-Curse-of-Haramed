@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 [System.Serializable]
 public class Wave
@@ -39,20 +40,24 @@ public class SpawnEnemy : MonoBehaviour
 
     void Update()
     {
+
         if (gameManager.Wave >= 0)
         {
             monsterIcons[0].SetActive(true);
         }
         if (gameManager.Wave >= 9)
         {
+            //GameObject.FindGameObjectWithTag("Sound").gameObject.GetComponent<SoundManager>().PlaySoundEffect(7);
             monsterIcons[1].SetActive(true);
         }
         if (gameManager.Wave >= 19)
         {
+            //GameObject.FindGameObjectWithTag("Sound").gameObject.GetComponent<SoundManager>().PlaySoundEffect(7);
             monsterIcons[2].SetActive(true);
         }
         if (gameManager.Wave >= 29)
         {
+            //GameObject.FindGameObjectWithTag("Sound").gameObject.GetComponent<SoundManager>().PlaySoundEffect(7);
             monsterIcons[3].SetActive(true);
         }
 
@@ -85,6 +90,7 @@ public class SpawnEnemy : MonoBehaviour
         {
             gameManager.gameOver = true;
             GameObject gameOverText = GameObject.FindGameObjectWithTag("GameWon");
+            GameObject.FindGameObjectWithTag("Sound").gameObject.GetComponent<SoundManager>().PlaySoundEffect(12);
             gameOverText.GetComponent<Animator>().SetBool("gameOver", true);
         }
 

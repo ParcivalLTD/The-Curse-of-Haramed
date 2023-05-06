@@ -29,6 +29,8 @@ public class SellButton : MonoBehaviour
         gameManager.Gold += refundAmount;
         Destroy(monster);
         transform.parent.parent.gameObject.SetActive(false);
+
+        GameObject.FindGameObjectWithTag("Sound").gameObject.GetComponent<SoundManager>().PlaySoundEffect(8);
     }
 
 }

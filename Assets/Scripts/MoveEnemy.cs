@@ -4,21 +4,25 @@ using System.Collections;
 public class MoveEnemy : MonoBehaviour
 {
 
-    [HideInInspector]
+    //[HideInInspector]
     public GameObject[] waypoints;
-    private int currentWaypoint = 0;
-    private float lastWaypointSwitchTime;
+    public int currentWaypoint = 0;
+    public float lastWaypointSwitchTime;
     public float speed = 1.0f;
+
+    public Vector3 startPosition;
 
     void Start()
     {
         lastWaypointSwitchTime = Time.time;
+
+        speed = Random.Range(5.0f, 6.0f);
     }
 
     void Update()
     {
 
-        Vector3 startPosition = waypoints[currentWaypoint].transform.position;
+        startPosition = waypoints[currentWaypoint].transform.position;
         Vector3 endPosition = waypoints[currentWaypoint + 1].transform.position;
 
         float pathLength = Vector2.Distance(startPosition, endPosition);
@@ -43,6 +47,11 @@ public class MoveEnemy : MonoBehaviour
 
             }
         }
+    }
+
+    public GameObject getNextWaypoint()
+    {
+        return waypoints[currentWaypoint + 1];
     }
 
     public float DistanceToGoal()

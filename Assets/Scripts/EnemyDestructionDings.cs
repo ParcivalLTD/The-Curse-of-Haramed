@@ -10,6 +10,8 @@ public class EnemyDestructionDings : MonoBehaviour
     public int cursorDamage;
     public GameObject GemPrefab;
 
+    public bool hasChildSpawned;
+
     public List<GameObject> Enemies = new List<GameObject>();
 
     void Start()
@@ -25,32 +27,35 @@ public class EnemyDestructionDings : MonoBehaviour
 
     private void OnMouseDown()
     {
-        HealthBar healthBar =
-                    gameObject.transform.Find("HealthBar").gameObject.GetComponent<HealthBar>();
+        HealthBar healthBar = gameObject.transform.Find("HealthBar").gameObject.GetComponent<HealthBar>();
         healthBar.currentHealth -= Mathf.Max(cursorDamage, 0);
+        GameObject.FindGameObjectWithTag("Sound").gameObject.GetComponent<SoundManager>().PlaySoundEffect(9);
         if (healthBar.currentHealth <= 0)
         {
             Destroy(gameObject);
-
             gameManager.Gold += (int)healthBar.maxHealth / 2;
+            
+
 
             if (Random.value < 0.1)
             {
                 GameObject gem = Instantiate(GemPrefab, transform.position, Quaternion.identity);
                 Destroy(gem, 3);
+                GameObject.FindGameObjectWithTag("Sound").gameObject.GetComponent<SoundManager>().PlaySoundEffect(3);
             }
+
         }
     }
+
 
     void OnDestroy()
     {
         if (enemyDelegate != null)
         {
             enemyDelegate(gameObject);
-
-
         }
-        //Instantiate(Enemies[Random.Range(0, Enemies.Count)], transform.position, Quaternion.identity);
-
+        gameManager.UpdateKillCount();
+        GameObject.FindGameObjectWithTag("Sound").gameObject.GetComponent<SoundManager>().PlaySoundEffect(3);
     }
 }
+

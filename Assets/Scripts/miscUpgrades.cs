@@ -105,6 +105,11 @@ public class miscUpgrades : MonoBehaviour
         }
     }
 
+    public void setButtonImage()
+    {
+        transform.Find("Button").GetComponent<Image>().sprite = upgrades;
+    }
+
     public void onMaldonadoBuy()
     {
         if (gameManager.Gems >= maldonadoCost && maldonadoBought == false)

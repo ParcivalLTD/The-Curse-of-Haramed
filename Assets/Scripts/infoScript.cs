@@ -20,6 +20,10 @@ public class infoScript : MonoBehaviour
         {
             textMeshPro.text = "A Gorilla, whose strikes rain down upon its foes with devastating force. Its wrath is unending, and it takes delight in the taste of younglings.";
         }
+        else if (transform.parent.parent.parent.name.Contains("Frog"))
+        {
+            textMeshPro.text = "Quak Quak Quak Quak Quak Quak Quak Quak Quak Quak Quak Quak Quak Quak Quak Quak Quak Quak Quak Quak Quak Quak Quak Quak Quak Quak.";
+        }
     }
 
     // Update is called once per frame

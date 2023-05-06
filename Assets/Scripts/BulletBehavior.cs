@@ -30,6 +30,8 @@ public class BulletBehavior : MonoBehaviour
         distance = Vector2.Distance(startPosition, targetPosition);
         GameObject gm = GameObject.Find("GameManager");
         gameManager = gm.GetComponent<GameManagerBehavior>();
+
+        GameObject.FindGameObjectWithTag("Sound").gameObject.GetComponent<SoundManager>().PlaySoundEffect(9);
     }
 
     void Update()
