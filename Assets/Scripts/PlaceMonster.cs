@@ -13,6 +13,8 @@ public class PlaceMonster : MonoBehaviour
     public GameObject canvas;
     public bool canvasIsShown = false;
 
+    private bool ctrlqPressed = false;
+
     void Start()
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManagerBehavior>();
@@ -44,26 +46,38 @@ public class PlaceMonster : MonoBehaviour
                 }
                 else if (Input.GetKeyDown(KeyCode.Alpha2))
                 {
-                    if (gameManager.Wave >= 9)
+                    if (gameManager.Wave >= 9 || ctrlqPressed)
                     {
                         PlaceMonsterAtIndex(1);
                     }
                 }
                 else if (Input.GetKeyDown(KeyCode.Alpha3))
                 {
-                    if (gameManager.Wave >= 19)
+                    if (gameManager.Wave >= 19 || ctrlqPressed)
                     {
                         PlaceMonsterAtIndex(2);
                     }
                 }
                 else if (Input.GetKeyDown(KeyCode.Alpha4))
                 {
-                    if (gameManager.Wave >= 29)
+                    if (gameManager.Wave >= 29 || ctrlqPressed)
                     {
                         PlaceMonsterAtIndex(3);
                     }
                 }
+                else if (Input.GetKeyDown(KeyCode.Alpha5))
+                {
+                    if (gameManager.Wave >= 39 || ctrlqPressed)
+                    {
+                        PlaceMonsterAtIndex(4);
+                    }
+                }
             }
+        }
+
+        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Q))
+        {
+            ctrlqPressed = true;
         }
 
         if (Input.GetMouseButtonDown(1) && monster != null)

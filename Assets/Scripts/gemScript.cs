@@ -26,5 +26,12 @@ public class gemScript : MonoBehaviour
                 GameObject.FindGameObjectWithTag("Sound").gameObject.GetComponent<SoundManager>().PlaySoundEffect(5);
             }
         }
+
+        if(GameObject.Find("Upgrades").GetComponent<miscUpgrades>().handOfBloodBought)
+        {
+            Destroy(gameObject);
+            gameManager.Gems++;
+            GameObject.FindGameObjectWithTag("Sound").gameObject.GetComponent<SoundManager>().PlaySoundEffect(5);
+        }
     }
 }

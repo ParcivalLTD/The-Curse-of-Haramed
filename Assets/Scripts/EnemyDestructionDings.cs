@@ -10,6 +10,8 @@ public class EnemyDestructionDings : MonoBehaviour
     public int cursorDamage;
     public GameObject GemPrefab;
 
+    public bool HandOfBloodBought = false;
+
     public bool hasChildSpawned;
 
     public List<GameObject> Enemies = new List<GameObject>();
@@ -33,8 +35,16 @@ public class EnemyDestructionDings : MonoBehaviour
         if (healthBar.currentHealth <= 0)
         {
             Destroy(gameObject);
-            gameManager.Gold += (int)healthBar.maxHealth / 2;
-            
+            if(gameManager.goldenHogObtained)
+            {
+                gameManager.Gold += (int)(healthBar.maxHealth / 2 * 1.1f);
+
+            }
+            else
+            {
+                gameManager.Gold += (int)healthBar.maxHealth / 2;
+            }
+
 
 
             if (Random.value < 0.1)

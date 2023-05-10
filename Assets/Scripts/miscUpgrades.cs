@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -25,6 +26,18 @@ public class miscUpgrades : MonoBehaviour
     public int goldenHogCost;
     private bool goldenHogBought = false;
 
+    public GameObject handOfBloodUpgadeButton;
+    public int handOfBloodCost;
+    public bool handOfBloodBought = false;
+
+    public GameObject magomedsGlassesUpgradeButton;
+    public int magomedsGlassesCost;
+    private bool magomedsGlassesBought = false;
+
+    public GameObject spanishHomeworkUpgradeButton;
+    public int spanishHomeworkCost;
+    private bool spanishHomeworkBought = false;
+
     public Sprite[] buffSprites;
     private Sprite[] activatedBuffSprites;
     private int numberOfPermanentBuffs = 0;
@@ -44,9 +57,16 @@ public class miscUpgrades : MonoBehaviour
 
         maldonadoCost = 10;
         goldenHogCost = 10;
+        handOfBloodCost = 15;
+        magomedsGlassesCost = 10;
+        spanishHomeworkCost = 10;
+
 
         maldonadoUpgradeButton.transform.Find("buyFor").GetComponent<TextMeshProUGUI>().text = maldonadoCost.ToString();
         goldenHogUpgradeButton.transform.Find("buyFor").GetComponent<TextMeshProUGUI>().text = goldenHogCost.ToString();
+        handOfBloodUpgadeButton.transform.Find("buyFor").GetComponent<TextMeshProUGUI>().text = handOfBloodCost.ToString();
+        magomedsGlassesUpgradeButton.transform.Find("buyFor").GetComponent<TextMeshProUGUI>().text = magomedsGlassesCost.ToString();
+        spanishHomeworkUpgradeButton.transform.Find("buyFor").GetComponent<TextMeshProUGUI>().text = spanishHomeworkCost.ToString();
     }
 
     void Update()
@@ -83,6 +103,48 @@ public class miscUpgrades : MonoBehaviour
         {
             goldenHogUpgradeButton.GetComponent<Button>().interactable = true;
             goldenHogUpgradeButton.transform.Find("text").GetComponent<TextMeshProUGUI>().text = "Buy";
+        }
+
+        if (gameManager.Gems < handOfBloodCost)
+        {
+            handOfBloodUpgadeButton.GetComponent<Button>().interactable = false;
+            handOfBloodUpgadeButton.transform.Find("text").GetComponent<TextMeshProUGUI>().text = "<size=30>Not enough gems!</size>";
+        }
+        else
+        {
+            handOfBloodUpgadeButton.GetComponent<Button>().interactable = true;
+            handOfBloodUpgadeButton.transform.Find("text").GetComponent<TextMeshProUGUI>().text = "Buy";
+        }
+
+        if (gameManager.Gems < magomedsGlassesCost)
+        {
+            magomedsGlassesUpgradeButton.GetComponent<Button>().interactable = false;
+            magomedsGlassesUpgradeButton.transform.Find("text").GetComponent<TextMeshProUGUI>().text = "<size=30>Not enough gems!</size>";
+        }
+        else
+        {
+            magomedsGlassesUpgradeButton.GetComponent<Button>().interactable = true;
+            magomedsGlassesUpgradeButton.transform.Find("text").GetComponent<TextMeshProUGUI>().text = "Buy";
+        }
+
+        if (gameManager.Gems < spanishHomeworkCost)
+        {
+            spanishHomeworkUpgradeButton.GetComponent<Button>().interactable = false;
+            spanishHomeworkUpgradeButton.transform.Find("text").GetComponent<TextMeshProUGUI>().text = "<size=30>Not enough gems!</size>";
+        }
+        else
+        {
+            spanishHomeworkUpgradeButton.GetComponent<Button>().interactable = true;
+            spanishHomeworkUpgradeButton.transform.Find("text").GetComponent<TextMeshProUGUI>().text = "Buy";
+        }
+
+        if(handOfBloodBought)
+        {
+            GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+            foreach (GameObject enemy in enemies)
+            {
+                enemy.GetComponent<EnemyDestructionDings>().HandOfBloodBought = true;
+            }
         }
     }
 
@@ -123,7 +185,11 @@ public class miscUpgrades : MonoBehaviour
             maldonadoUpgradeButton.transform.Find("text").gameObject.SetActive(false);
             maldonadoBought = true;
 
-            //increase firerate of all monsters
+            GameObject[] monsters = GameObject.FindGameObjectsWithTag("Monster");
+            foreach (GameObject monster in monsters)
+            {
+                monster.GetComponent<MonsterData>().CurrentLevel.fireRate = monster.GetComponent<MonsterData>().CurrentLevel.fireRate * 0.9f;
+            }
         }
     }
 
@@ -133,14 +199,71 @@ public class miscUpgrades : MonoBehaviour
         {
             transform.Find("buffs").transform.Find("buff" + (numberOfPermanentBuffs + 1)).gameObject.GetComponent<Image>().sprite = buffSprites[1];
             transform.Find("buffs").transform.Find("buff" + (numberOfPermanentBuffs + 1)).gameObject.GetComponent<Image>().color = new Color(255, 255, 255, 1);
-            gameManager.Gems -= maldonadoCost;
+            gameManager.Gems -= goldenHogCost;
             numberOfPermanentBuffs++;
             goldenHogUpgradeButton.transform.Find("buyFor").GetComponent<TextMeshProUGUI>().text = "-";
             goldenHogUpgradeButton.transform.Find("check").gameObject.SetActive(true);
             goldenHogUpgradeButton.transform.Find("text").gameObject.SetActive(false);
             goldenHogBought = true;
 
-            //gameManager.goldenHogObtained = true;
+            gameManager.goldenHogObtained = true;
+        }
+    }
+
+    public void onHandOfBloodBuy()
+    {
+        if (gameManager.Gems >= handOfBloodCost && handOfBloodBought == false)
+        {
+            transform.Find("buffs").transform.Find("buff" + (numberOfPermanentBuffs + 1)).gameObject.GetComponent<Image>().sprite = buffSprites[2];
+            transform.Find("buffs").transform.Find("buff" + (numberOfPermanentBuffs + 1)).gameObject.GetComponent<Image>().color = new Color(255, 255, 255, 1);
+            gameManager.Gems -= handOfBloodCost;
+            numberOfPermanentBuffs++;
+            handOfBloodUpgadeButton.transform.Find("buyFor").GetComponent<TextMeshProUGUI>().text = "-";
+            handOfBloodUpgadeButton.transform.Find("check").gameObject.SetActive(true);
+            handOfBloodUpgadeButton.transform.Find("text").gameObject.SetActive(false);
+            handOfBloodBought = true;
+        }
+    }
+
+    public void onMagomedsGlassesBuy()
+    {
+        if (gameManager.Gems >= magomedsGlassesCost && magomedsGlassesBought == false)
+        {
+            transform.Find("buffs").transform.Find("buff" + (numberOfPermanentBuffs + 1)).gameObject.GetComponent<Image>().sprite = buffSprites[3];
+            transform.Find("buffs").transform.Find("buff" + (numberOfPermanentBuffs + 1)).gameObject.GetComponent<Image>().color = new Color(255, 255, 255, 1);
+            gameManager.Gems -= magomedsGlassesCost;
+            numberOfPermanentBuffs++;
+            magomedsGlassesUpgradeButton.transform.Find("buyFor").GetComponent<TextMeshProUGUI>().text = "-";
+            magomedsGlassesUpgradeButton.transform.Find("check").gameObject.SetActive(true);
+            magomedsGlassesUpgradeButton.transform.Find("text").gameObject.SetActive(false);
+            magomedsGlassesBought = true;
+
+            GameObject[] monsters = GameObject.FindGameObjectsWithTag("Monster");
+            foreach (GameObject monster in monsters)
+            {
+                monster.GetComponent<CircleCollider2D>().radius *= 1.4f;
+            }
+        }
+    }
+
+    public void onSpanishHomeworkBuy()
+    {
+        if (gameManager.Gems >= spanishHomeworkCost && spanishHomeworkBought == false)
+        {
+            transform.Find("buffs").transform.Find("buff" + (numberOfPermanentBuffs + 1)).gameObject.GetComponent<Image>().sprite = buffSprites[4];
+            transform.Find("buffs").transform.Find("buff" + (numberOfPermanentBuffs + 1)).gameObject.GetComponent<Image>().color = new Color(255, 255, 255, 1);
+            gameManager.Gems -= spanishHomeworkCost;
+            numberOfPermanentBuffs++;
+            spanishHomeworkUpgradeButton.transform.Find("buyFor").GetComponent<TextMeshProUGUI>().text = "-";
+            spanishHomeworkUpgradeButton.transform.Find("check").gameObject.SetActive(true);
+            spanishHomeworkUpgradeButton.transform.Find("text").gameObject.SetActive(false);
+            spanishHomeworkBought = true;
+
+            GameObject[] monsters = GameObject.FindGameObjectsWithTag("Monster");
+            foreach (GameObject monster in monsters)
+            {
+                monster.GetComponent<MonsterData>().CurrentLevel.damage = Mathf.RoundToInt(monster.GetComponent<MonsterData>().CurrentLevel.damage * 1.1f);
+            }
         }
     }
 

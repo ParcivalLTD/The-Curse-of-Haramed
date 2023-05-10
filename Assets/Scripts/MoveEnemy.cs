@@ -10,7 +10,12 @@ public class MoveEnemy : MonoBehaviour
     public float lastWaypointSwitchTime;
     public float speed = 1.0f;
 
+    public float totalTimeForPath;
+
+    public float currentTimeOnPath;
+
     public Vector3 startPosition;
+    public float timeScale = 1f;
 
     void Start()
     {
@@ -21,13 +26,12 @@ public class MoveEnemy : MonoBehaviour
 
     void Update()
     {
-
         startPosition = waypoints[currentWaypoint].transform.position;
         Vector3 endPosition = waypoints[currentWaypoint + 1].transform.position;
 
         float pathLength = Vector2.Distance(startPosition, endPosition);
-        float totalTimeForPath = pathLength / speed;
-        float currentTimeOnPath = Time.time - lastWaypointSwitchTime;
+        totalTimeForPath = pathLength / (speed);
+        currentTimeOnPath = Time.time - lastWaypointSwitchTime;
         gameObject.transform.position = Vector2.Lerp(startPosition, endPosition, currentTimeOnPath / totalTimeForPath);
 
         if (gameObject.transform.position.Equals(endPosition))

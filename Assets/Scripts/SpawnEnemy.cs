@@ -60,6 +60,19 @@ public class SpawnEnemy : MonoBehaviour
             //GameObject.FindGameObjectWithTag("Sound").gameObject.GetComponent<SoundManager>().PlaySoundEffect(7);
             monsterIcons[3].SetActive(true);
         }
+        if (gameManager.Wave >= 29)
+        {
+            //GameObject.FindGameObjectWithTag("Sound").gameObject.GetComponent<SoundManager>().PlaySoundEffect(7);
+            monsterIcons[4].SetActive(true);
+        }
+
+        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Q))
+        {
+            monsterIcons[2].SetActive(true);
+            monsterIcons[3].SetActive(true);
+            monsterIcons[1].SetActive(true);
+            monsterIcons[4].SetActive(true);    
+        }
 
         int currentWave = gameManager.Wave;
         if (currentWave < waves.Length)
@@ -81,7 +94,16 @@ public class SpawnEnemy : MonoBehaviour
             {
                 gameManager.Wave++;
                 goldperWave += 100;
-                gameManager.Gold = Mathf.RoundToInt(gameManager.Gold + goldperWave);
+
+                if(gameManager.goldenHogObtained)
+                {
+                    gameManager.Gold = Mathf.RoundToInt((gameManager.Gold + goldperWave) * 1.1f);
+                } else
+                {
+                    gameManager.Gold = Mathf.RoundToInt(gameManager.Gold + goldperWave);
+                }
+
+                
                 enemiesSpawned = 0;
                 lastSpawnTime = Time.time;
             }
@@ -112,6 +134,10 @@ public class SpawnEnemy : MonoBehaviour
             else if (icon.name == "frog0")
             {
                 monsterCost = 1300;
+            }
+            else if (icon.name == "magicmirt0")
+            {
+                monsterCost = 1600;
             }
             else
             {

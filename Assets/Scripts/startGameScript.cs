@@ -10,6 +10,7 @@ public class startGameScript : MonoBehaviour
     public TextMeshProUGUI theText;
     private float currentSliderValue = 0f;
     private float targetSliderValue = 0f;
+    private float sliderSpeed = 5f; // Adjust the speed of the slider movement here
 
     public string nextSceneName;
 
@@ -25,7 +26,7 @@ public class startGameScript : MonoBehaviour
 
     void Update()
     {
-        currentSliderValue = Mathf.Lerp(currentSliderValue, targetSliderValue, Time.deltaTime * 5f);
+        currentSliderValue = Mathf.Lerp(currentSliderValue, targetSliderValue, Time.deltaTime * sliderSpeed);
 
         if (SliderHolder.slider != null)
         {

@@ -18,7 +18,6 @@ public class ShootEnemies : MonoBehaviour
         enemiesInRange = new List<GameObject>();
         lastShotTime = Time.time;
         monsterData = gameObject.GetComponentInChildren<MonsterData>();
-
     }
 
     void Update()
@@ -36,6 +35,17 @@ public class ShootEnemies : MonoBehaviour
                 int totalDamageInt = int.Parse(damageDealt.GetComponent<TextMeshProUGUI>().text);
                 totalDamageInt += (int)(damage * enemiesInRange.Count);
                 damageDealt.GetComponent<TextMeshProUGUI>().text = totalDamageInt.ToString();
+            }
+        } else if (monsterData.nameOfMonster == "Magicmirt")
+        {
+            foreach (GameObject enemy in enemiesInRange)
+            {
+                MoveEnemy enemyScript = enemy.GetComponent<MoveEnemy>();
+                if (enemyScript != null)
+                {
+                    enemyScript.speed *= 0.8f;
+                    //TODO
+                }
             }
         }
         else
@@ -62,7 +72,16 @@ public class ShootEnemies : MonoBehaviour
                     int totalDamageInt = int.Parse(damageDealt.GetComponent<TextMeshProUGUI>().text);
                     totalDamageInt += (int)damage;
                     damageDealt.GetComponent<TextMeshProUGUI>().text = totalDamageInt.ToString();
+
+                    if (monsterData.nameOfMonster == "Gorilla")
+                    {
+                        monsterData.CurrentLevel.visualization.GetComponent<Animator>().SetTrigger("Hit");
+                        
+                    }
+
                 }
+
+                
 
                 if (monsterData.nameOfMonster != "Gorilla")
                 {
@@ -83,6 +102,16 @@ public class ShootEnemies : MonoBehaviour
 
     void Shoot(Collider2D target)
     {
+        if(monsterData.nameOfMonster == "Gorilla")
+        {
+            GameObject.FindGameObjectWithTag("Sound").gameObject.GetComponent<SoundManager>().PlaySoundEffect(13);
+        }
+        else
+        {
+            GameObject.FindGameObjectWithTag("Sound").gameObject.GetComponent<SoundManager>().PlaySoundEffect(9);
+        }
+
+
         GameObject bulletPrefab = monsterData.CurrentLevel.bullet;
 
         Vector3 startPosition = gameObject.transform.position;

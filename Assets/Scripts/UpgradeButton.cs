@@ -215,6 +215,6 @@ public class UpgradeButton : MonoBehaviour
             fireRateUpgradeFor.GetComponent<TextMeshProUGUI>().text = "";
             damageUpgradeData.GetComponent<TextMeshProUGUI>().text = "<b>Damage (" + damageLevel + "): </b>\n\n" + monster.GetComponent<MonsterData>().CurrentLevel.damage;
             damageUpgradeFor.GetComponent<TextMeshProUGUI>().text = "";
-        }
+        } 
     }
 }

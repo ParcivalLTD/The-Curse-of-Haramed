@@ -30,8 +30,6 @@ public class BulletBehavior : MonoBehaviour
         distance = Vector2.Distance(startPosition, targetPosition);
         GameObject gm = GameObject.Find("GameManager");
         gameManager = gm.GetComponent<GameManagerBehavior>();
-
-        GameObject.FindGameObjectWithTag("Sound").gameObject.GetComponent<SoundManager>().PlaySoundEffect(9);
     }
 
     void Update()
@@ -48,11 +46,20 @@ public class BulletBehavior : MonoBehaviour
                     healthBarTransform.gameObject.GetComponent<HealthBar>();
                 healthBar.currentHealth -= Mathf.Max(damage, 0);
 
+
                 if (healthBar.currentHealth <= 0)
                 {
                     Destroy(target);
 
-                    gameManager.Gold += (int) healthBar.maxHealth / 2;
+                    if (gameManager.goldenHogObtained)
+                    {
+                        gameManager.Gold += (int)(healthBar.maxHealth / 2 * 1.1f);
+
+                    }
+                    else
+                    {
+                        gameManager.Gold += (int)healthBar.maxHealth / 2;
+                    }
 
                     if (Random.value < 0.1)
                     {
