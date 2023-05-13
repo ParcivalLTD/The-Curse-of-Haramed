@@ -13,6 +13,7 @@ public class BulletBehavior : MonoBehaviour
     private float startTime;
     public GameObject GemPrefab;
     private GameManagerBehavior gameManager;
+    public bool critical = false;
 
     public void setDamage(int damage1)
     {
@@ -53,12 +54,12 @@ public class BulletBehavior : MonoBehaviour
 
                     if (gameManager.goldenHogObtained)
                     {
-                        gameManager.Gold += (int)(healthBar.maxHealth / 2 * 1.1f);
+                        gameManager.Gold += (int)(healthBar.maxHealth / 5 * 1.1f);
 
                     }
                     else
                     {
-                        gameManager.Gold += (int)healthBar.maxHealth / 2;
+                        gameManager.Gold += (int)healthBar.maxHealth / 5;
                     }
 
                     if (Random.value < 0.1)

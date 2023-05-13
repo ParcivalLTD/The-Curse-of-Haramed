@@ -15,6 +15,7 @@ public class miscUpgrades : MonoBehaviour
     public int currentGems;
     private GameManagerBehavior gameManager;
     public GameObject cursorUpgradeButton;
+    public GameObject critChanceUpgradeButton;
     public int cursorCost;
     public int cursorLevel;
 
@@ -45,6 +46,10 @@ public class miscUpgrades : MonoBehaviour
     public Sprite upgrades;
     public Sprite upgradesPressed;
 
+    public int critChanceIncrease;
+    public int critChanceLevel;
+    public int critChanceCost;
+    public int critChance;
     void Start()
     {
         panel.SetActive(false);
@@ -61,12 +66,32 @@ public class miscUpgrades : MonoBehaviour
         magomedsGlassesCost = 10;
         spanishHomeworkCost = 10;
 
+        critChanceIncrease = 10;
+        critChanceLevel = 1;
+        critChanceCost = 15;
 
         maldonadoUpgradeButton.transform.Find("buyFor").GetComponent<TextMeshProUGUI>().text = maldonadoCost.ToString();
         goldenHogUpgradeButton.transform.Find("buyFor").GetComponent<TextMeshProUGUI>().text = goldenHogCost.ToString();
         handOfBloodUpgadeButton.transform.Find("buyFor").GetComponent<TextMeshProUGUI>().text = handOfBloodCost.ToString();
         magomedsGlassesUpgradeButton.transform.Find("buyFor").GetComponent<TextMeshProUGUI>().text = magomedsGlassesCost.ToString();
         spanishHomeworkUpgradeButton.transform.Find("buyFor").GetComponent<TextMeshProUGUI>().text = spanishHomeworkCost.ToString();
+
+        critChanceUpgradeButton.transform.Find("upgradeFor").GetComponent<TextMeshProUGUI>().text = critChanceCost.ToString();
+        critChanceUpgradeButton.transform.Find("info").GetComponent<TextMeshProUGUI>().text = "<b>Crit \nChance (" + critChanceLevel + "):</b>\n\n" + critChance.ToString() + "%";
+
+        cursorUpgradeButton.transform.Find("upgradeFor").GetComponent<TextMeshProUGUI>().text = cursorCost.ToString();
+        cursorUpgradeButton.transform.Find("info").GetComponent<TextMeshProUGUI>().text = "<b>Cursor (" + cursorLevel + "):</b>\n\n" + cursorDamage.ToString() + " to " + (cursorDamage + cursorIncrease).ToString();
+    }
+
+    public void onCritChanceUpgrade()
+    {
+        if (gameManager.Gems >= critChanceCost)
+        {
+            gameManager.Gems -= critChanceCost;
+            critChance += critChanceIncrease;
+            critChanceCost += 5;
+            critChanceLevel++;
+        }
     }
 
     void Update()
@@ -81,10 +106,24 @@ public class miscUpgrades : MonoBehaviour
             cursorUpgradeButton.transform.Find("text").GetComponent<TextMeshProUGUI>().text = "Upgrade";
         }
 
+        if (gameManager.Gems < critChanceCost)
+        {
+            critChanceUpgradeButton.GetComponent<Button>().interactable = false;
+            critChanceUpgradeButton.transform.Find("text").GetComponent<TextMeshProUGUI>().text = "<size=30>Not enough gems!</size>";
+        }
+        else
+        {
+            critChanceUpgradeButton.GetComponent<Button>().interactable = true;
+            critChanceUpgradeButton.transform.Find("text").GetComponent<TextMeshProUGUI>().text = "Upgrade";
+        }
+
         cursorUpgradeButton.transform.Find("upgradeFor").GetComponent<TextMeshProUGUI>().text = cursorCost.ToString();
         cursorUpgradeButton.transform.Find("info").GetComponent<TextMeshProUGUI>().text = "<b>Cursor (" + cursorLevel + "):</b>\n\n" + cursorDamage.ToString() + " to " + (cursorDamage + cursorIncrease).ToString();
 
-        if(gameManager.Gems < maldonadoCost)
+        critChanceUpgradeButton.transform.Find("upgradeFor").GetComponent<TextMeshProUGUI>().text = critChanceCost.ToString();
+        critChanceUpgradeButton.transform.Find("info").GetComponent<TextMeshProUGUI>().text = "<b>Crit \nChance (" + critChanceLevel + "):</b>\n\n" + critChance.ToString() + "%";
+
+        if (gameManager.Gems < maldonadoCost)
         {
             maldonadoUpgradeButton.GetComponent<Button>().interactable = false;
             maldonadoUpgradeButton.transform.Find("text").GetComponent<TextMeshProUGUI>().text = "<size=30>Not enough gems!</size>";

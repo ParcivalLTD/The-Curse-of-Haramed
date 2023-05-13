@@ -1,8 +1,8 @@
-
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ShootEnemies : MonoBehaviour
 {
@@ -12,16 +12,24 @@ public class ShootEnemies : MonoBehaviour
     public GameObject bulletPrefab;
     public GameObject damageDealt;
 
+    public float critChance;
+    private GameObject critLabel;
 
     void Start()
     {
         enemiesInRange = new List<GameObject>();
         lastShotTime = Time.time;
         monsterData = gameObject.GetComponentInChildren<MonsterData>();
+
+        critLabel = GameObject.Find("CritLabel");
+        critChance = GameObject.Find("Upgrades").GetComponent<miscUpgrades>().critChance;
     }
 
     void Update()
     {
+        critChance = GameObject.Find("Upgrades").GetComponent<miscUpgrades>().critChance;
+        Debug.Log("" + critChance);
+
         if (monsterData.nameOfMonster == "Frog")
         {
             if (Time.time - lastShotTime > monsterData.CurrentLevel.fireRate)
@@ -36,7 +44,8 @@ public class ShootEnemies : MonoBehaviour
                 totalDamageInt += (int)(damage * enemiesInRange.Count);
                 damageDealt.GetComponent<TextMeshProUGUI>().text = totalDamageInt.ToString();
             }
-        } else if (monsterData.nameOfMonster == "Magicmirt")
+        }
+        else if (monsterData.nameOfMonster == "Magicmirt")
         {
             foreach (GameObject enemy in enemiesInRange)
             {
@@ -76,12 +85,8 @@ public class ShootEnemies : MonoBehaviour
                     if (monsterData.nameOfMonster == "Gorilla")
                     {
                         monsterData.CurrentLevel.visualization.GetComponent<Animator>().SetTrigger("Hit");
-                        
                     }
-
                 }
-
-                
 
                 if (monsterData.nameOfMonster != "Gorilla")
                 {
@@ -102,7 +107,7 @@ public class ShootEnemies : MonoBehaviour
 
     void Shoot(Collider2D target)
     {
-        if(monsterData.nameOfMonster == "Gorilla")
+        if (monsterData.nameOfMonster == "Gorilla")
         {
             GameObject.FindGameObjectWithTag("Sound").gameObject.GetComponent<SoundManager>().PlaySoundEffect(13);
         }
@@ -125,6 +130,36 @@ public class ShootEnemies : MonoBehaviour
         bulletComp.target = target.gameObject;
         bulletComp.startPosition = startPosition;
         bulletComp.targetPosition = targetPosition;
+
+        bool isCritical = Random.Range(0f, 100f) < critChance;
+        bulletComp.damage = (int) (isCritical ? bulletComp.damage * 1.2f : bulletComp.damage);
+
+        if (isCritical)
+        {
+            critLabel.transform.position = target.transform.position;
+            StartCoroutine(DisplayGoldDifference());
+        }
+    }
+
+    private IEnumerator DisplayGoldDifference()
+    {
+        critLabel.GetComponent<SpriteRenderer>().color = new Color(critLabel.GetComponent<SpriteRenderer>().color.r, critLabel.GetComponent<SpriteRenderer>().color.g, critLabel.GetComponent<SpriteRenderer>().color.b, 255);
+        Vector3 position = critLabel.transform.position;
+        float startY = position.y;
+        float endY = startY + 1f;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < 0.4f)
+        {
+            float newY = Mathf.Lerp(startY, endY, elapsedTime / 1f);
+            position = new Vector3(position.x, newY, position.z);
+            critLabel.transform.position = position;
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        critLabel.GetComponent<SpriteRenderer>().color = new Color(critLabel.GetComponent<SpriteRenderer>().color.r, critLabel.GetComponent<SpriteRenderer>().color.g, critLabel.GetComponent<SpriteRenderer>().color.b, 0);
+        critLabel.transform.position = position;
     }
 
 

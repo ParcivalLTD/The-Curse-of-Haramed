@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class GameManagerBehavior : MonoBehaviour
@@ -22,6 +23,10 @@ public class GameManagerBehavior : MonoBehaviour
     public Text timeLabel;
     private int killCount;
     public Text killCountLabel;
+
+    private Vector3 position;
+
+    public GameObject plusAnimationPrefab;
 
     public int Health
     {
@@ -112,10 +117,49 @@ public class GameManagerBehavior : MonoBehaviour
         }
         set
         {
+            int goldDifference = value - gold;
             gold = value;
             goldLabel.GetComponent<Text>().text = "$" + gold;
+
+            if (goldDifference > 0 && goldDifference != 500)
+            {
+                plusAnimationPrefab.GetComponent<Text>().text = "+ $" + goldDifference.ToString();
+                StartCoroutine(DisplayGoldDifference(true));
+            } else if(goldDifference < 0)
+            {
+                plusAnimationPrefab.GetComponent<Text>().text = "- $" + Mathf.Abs(goldDifference).ToString();
+                StartCoroutine(DisplayGoldDifference(false));
+            }
         }
     }
+
+    private IEnumerator DisplayGoldDifference(bool isPos)
+    {
+        if (!isPos)
+        {
+            plusAnimationPrefab.GetComponent<Text>().color =  new Color32(188, 79, 82, 255);
+        }
+        else
+        {
+            plusAnimationPrefab.GetComponent<Text>().color = new Color32(173, 158, 89, 255);
+        }
+        plusAnimationPrefab.transform.position = position;
+        float startY = plusAnimationPrefab.transform.position.y;
+        float endY = startY + 10f;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < 1f)
+        {
+            float newY = Mathf.Lerp(startY, endY, elapsedTime / 1f);
+            plusAnimationPrefab.transform.position = new Vector3(plusAnimationPrefab.transform.position.x, newY, plusAnimationPrefab.transform.position.z);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        plusAnimationPrefab.GetComponent<Text>().text = "";
+        plusAnimationPrefab.transform.position = position;
+    }
+
 
     public int Gems
     {
@@ -152,9 +196,11 @@ public class GameManagerBehavior : MonoBehaviour
         killCount = 0;
         killCountLabel.GetComponent<Text>().text = "0";
 
+        position = plusAnimationPrefab.transform.position;
+
         Time.timeScale = 1f;
 
-        Gold = 1000;
+        Gold = 500;
         Wave = 0;
         Health = 5;
         Gems = 0;
@@ -190,10 +236,18 @@ public class GameManagerBehavior : MonoBehaviour
 
     void Update()
     {
-        time += Time.deltaTime;
+        if (GameObject.Find("Speed").GetComponent<speedScript>().isTwoXSpeed)
+        {
+            time += Time.deltaTime / 2f;
+        }
+        else
+        {
+            time += Time.deltaTime;
+        }
+
         UpdateTimeLabel();
         Screen.fullScreen = GameObject.Find("Pause").GetComponent<pausegame>().isFullscreen;
-
     }
+
 
 }

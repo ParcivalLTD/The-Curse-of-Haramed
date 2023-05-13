@@ -2,67 +2,59 @@
 using System.Collections;
 using System.Collections.Generic;
 
-[System.Serializable]
-public class Wave
-{
-    public GameObject[] enemyPrefabs;
-    public float spawnInterval = 2;
-    public int maxEnemies = 20;
-}
-
 public class SpawnEnemy : MonoBehaviour
 {
-
+    public GameObject[] enemyPrefabs; // Array of enemy prefabs
+    private WaveGenerator waveGenerator;
+    private List<GameObject> currentWave;
+    private int currentIndex;
     public GameObject[] waypoints;
-    public GameObject testEnemyPrefab;
-    public Wave[] waves;
-    public int timeBetweenWaves = 5;
+    private float enemySpawnInterval;
+    private GameManagerBehavior gameManager;
     public int goldperWave = 100;
     public GameObject[] monsterIcons;
     private int monsterCost;
 
-    private GameManagerBehavior gameManager;
-
-    private float lastSpawnTime;
-    private int enemiesSpawned = 0;
-
-
-    void Start()
+    private void Start()
     {
-        lastSpawnTime = Time.time;
+        waveGenerator = new WaveGenerator(new List<GameObject>(enemyPrefabs), waypoints);
+        StartNextWave();
+
         gameManager = GameObject.Find("GameManager").GetComponent<GameManagerBehavior>();
 
         foreach (GameObject icon in monsterIcons)
         {
             icon.SetActive(false);
         }
+
+        enemySpawnInterval = 0.5f;
     }
 
-    void Update()
-    {
+    private float spawnTimer = 0f;
+    private float minSpawnInterval = 0.3f;
+    private float maxSpawnInterval = 1.3f;
+    private float nextSpawnInterval = 0f;
 
+    private void Update()
+    {
         if (gameManager.Wave >= 0)
         {
             monsterIcons[0].SetActive(true);
         }
         if (gameManager.Wave >= 9)
         {
-            //GameObject.FindGameObjectWithTag("Sound").gameObject.GetComponent<SoundManager>().PlaySoundEffect(7);
             monsterIcons[1].SetActive(true);
         }
         if (gameManager.Wave >= 19)
         {
-            //GameObject.FindGameObjectWithTag("Sound").gameObject.GetComponent<SoundManager>().PlaySoundEffect(7);
             monsterIcons[2].SetActive(true);
         }
         if (gameManager.Wave >= 29)
         {
-            //GameObject.FindGameObjectWithTag("Sound").gameObject.GetComponent<SoundManager>().PlaySoundEffect(7);
             monsterIcons[3].SetActive(true);
         }
         if (gameManager.Wave >= 29)
         {
-            //GameObject.FindGameObjectWithTag("Sound").gameObject.GetComponent<SoundManager>().PlaySoundEffect(7);
             monsterIcons[4].SetActive(true);
         }
 
@@ -71,59 +63,60 @@ public class SpawnEnemy : MonoBehaviour
             monsterIcons[2].SetActive(true);
             monsterIcons[3].SetActive(true);
             monsterIcons[1].SetActive(true);
-            monsterIcons[4].SetActive(true);    
+            monsterIcons[4].SetActive(true);
         }
 
-        int currentWave = gameManager.Wave;
-        if (currentWave < waves.Length)
+        if ((currentWave == null || currentIndex >= currentWave.Count))
         {
-            float timeInterval = Time.time - lastSpawnTime;
-            float spawnInterval = waves[currentWave].spawnInterval;
-            if (((enemiesSpawned == 0 && timeInterval > timeBetweenWaves) ||
-                 timeInterval > spawnInterval) &&
-                enemiesSpawned < waves[currentWave].maxEnemies)
+            if (waveGenerator.IsWaitingForWave())
             {
-                lastSpawnTime = Time.time;
-                GameObject newEnemy = (GameObject)
-                    Instantiate(waves[currentWave].enemyPrefabs[Random.Range(0, waves[currentWave].enemyPrefabs.Length)]);
-                newEnemy.GetComponent<MoveEnemy>().waypoints = waypoints;
-                enemiesSpawned++;
+                return;
             }
-            if (enemiesSpawned == waves[currentWave].maxEnemies &&
-                GameObject.FindGameObjectWithTag("Enemy") == null)
+            else
             {
+                GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+                if (enemies.Length > 0)
+                {
+                    return;
+                }
                 gameManager.Wave++;
-                goldperWave += 100;
 
-                if(gameManager.goldenHogObtained)
+                if (gameManager.goldenHogObtained)
                 {
                     gameManager.Gold = Mathf.RoundToInt((gameManager.Gold + goldperWave) * 1.1f);
-                } else
+                }
+                else
                 {
                     gameManager.Gold = Mathf.RoundToInt(gameManager.Gold + goldperWave);
                 }
 
-                
-                enemiesSpawned = 0;
-                lastSpawnTime = Time.time;
+                goldperWave += (gameManager.Wave * 2);
+                StartNextWave();
+            }
+        }
+
+        if (spawnTimer <= 0f)
+        {
+            if (currentIndex < currentWave.Count)
+            {
+                SpawnEnemyWithInterval(currentWave[currentIndex]);
+                currentIndex++;
+                nextSpawnInterval = Random.Range(minSpawnInterval, maxSpawnInterval);
+                spawnTimer = nextSpawnInterval;
             }
         }
         else
         {
-            gameManager.gameOver = true;
-            GameObject gameOverText = GameObject.FindGameObjectWithTag("GameWon");
-            GameObject.FindGameObjectWithTag("Sound").gameObject.GetComponent<SoundManager>().PlaySoundEffect(12);
-            gameOverText.GetComponent<Animator>().SetBool("gameOver", true);
+            spawnTimer -= Time.deltaTime;
         }
 
         foreach (GameObject icon in monsterIcons)
         {
-            
-            
             if (icon.name == "cat0")
             {
                 monsterCost = 200;
-            } else if (icon.name == "platapus0")
+            }
+            else if (icon.name == "platapus0")
             {
                 monsterCost = 500;
             }
@@ -149,16 +142,29 @@ public class SpawnEnemy : MonoBehaviour
                 SpriteRenderer spriteRenderer = icon.GetComponent<SpriteRenderer>();
                 spriteRenderer.color = Color.gray;
                 icon.transform.Find("strikthrough").GetComponent<SpriteRenderer>().gameObject.SetActive(true);
-
-            } else
+            }
+            else
             {
                 SpriteRenderer spriteRenderer = icon.GetComponent<SpriteRenderer>();
                 spriteRenderer.color = Color.white;
                 icon.transform.Find("strikthrough").GetComponent<SpriteRenderer>().gameObject.SetActive(false);
             }
         }
-
     }
 
+
+    private void StartNextWave()
+    {
+        currentWave = waveGenerator.GenerateWave();
+        currentIndex = 0;
+    }
+
+    private void SpawnEnemyWithInterval(GameObject enemyPrefab)
+    {
+        enemyPrefab.gameObject.GetComponent<MoveEnemy>().waypoints = waypoints;
+        Instantiate(enemyPrefab, waypoints[0].transform.position, Quaternion.identity);
+
+        enemySpawnInterval = Random.Range(5, 6);
+    }
 
 }
