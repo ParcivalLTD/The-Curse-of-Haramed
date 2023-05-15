@@ -121,7 +121,7 @@ public class GameManagerBehavior : MonoBehaviour
             gold = value;
             goldLabel.GetComponent<Text>().text = "$" + gold;
 
-            if (goldDifference > 0 && goldDifference != 500)
+            if (goldDifference > 100 && goldDifference != 500)
             {
                 plusAnimationPrefab.GetComponent<Text>().text = "+ $" + goldDifference.ToString();
                 StartCoroutine(DisplayGoldDifference(true));
@@ -202,7 +202,7 @@ public class GameManagerBehavior : MonoBehaviour
 
         Gold = 500;
         Wave = 0;
-        Health = 5;
+        Health = 5999;
         Gems = 0;
         GameObject[] monsters = GameObject.FindGameObjectsWithTag("Monster");
         foreach (GameObject monster in monsters)

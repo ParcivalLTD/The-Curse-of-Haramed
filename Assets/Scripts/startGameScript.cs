@@ -4,16 +4,18 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
+using DanielLochner.Assets.SimpleScrollSnap;
 
 public class startGameScript : MonoBehaviour
 {
     public TextMeshProUGUI theText;
     private float currentSliderValue = 0f;
     private float targetSliderValue = 0f;
-    private float sliderSpeed = 5f; // Adjust the speed of the slider movement here
+    private float sliderSpeed = 2f;
 
     public string nextSceneName;
 
+    public int selectedLevel;
     public void LoadNextScene()
     {
         StartCoroutine(LoadSceneAsync());
@@ -32,6 +34,14 @@ public class startGameScript : MonoBehaviour
         {
             SliderHolder.slider.value = currentSliderValue;
         }
+
+        if(selectedLevel  == 0)
+        {
+            nextSceneName = "GameScene";
+        } else if (selectedLevel == 1)
+        {
+            nextSceneName = "GameScene1";
+        }
     }
 
     public void exitGame()
@@ -39,6 +49,16 @@ public class startGameScript : MonoBehaviour
         Application.Quit();
     }
 
+
+    public void nextLevel()
+    {
+        selectedLevel++;
+    }
+
+    public void previousLevel()
+    {
+        selectedLevel--;
+    }
 
     IEnumerator LoadSceneAsync()
     {

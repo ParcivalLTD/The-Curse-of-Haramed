@@ -14,6 +14,11 @@ public class SpawnEnemy : MonoBehaviour
     public int goldperWave = 100;
     public GameObject[] monsterIcons;
     private int monsterCost;
+    public GameObject catPanel;
+    public GameObject platapusPanel;
+    public GameObject gorillaPanel;
+    public GameObject frogPanel;
+    public GameObject magicPanel;
 
     private void Start()
     {
@@ -35,27 +40,42 @@ public class SpawnEnemy : MonoBehaviour
     private float maxSpawnInterval = 1.3f;
     private float nextSpawnInterval = 0f;
 
+    private void Awake()
+    {
+        
+    }
+
     private void Update()
     {
-        if (gameManager.Wave >= 0)
+        if (gameManager.Wave >= 0 && !catPanel.GetComponent<catPanel>().hasBeenUnlocked)
         {
             monsterIcons[0].SetActive(true);
+            //catPanel.GetComponent<catPanel>().ShowPanel();
+            catPanel.GetComponent<catPanel>().hasBeenUnlocked = true;
         }
-        if (gameManager.Wave >= 9)
+        if (gameManager.Wave >= 9 && !platapusPanel.GetComponent<platapusPanel>().hasBeenUnlocked)
         {
             monsterIcons[1].SetActive(true);
+            platapusPanel.GetComponent<platapusPanel>().ShowPanel();
+            platapusPanel.GetComponent<platapusPanel>().hasBeenUnlocked = true;
         }
-        if (gameManager.Wave >= 19)
+        if (gameManager.Wave >= 19 && !gorillaPanel.GetComponent<gorillaPanel>().hasBeenUnlocked)
         {
             monsterIcons[2].SetActive(true);
+            gorillaPanel.GetComponent<gorillaPanel>().ShowPanel();
+            gorillaPanel.GetComponent<gorillaPanel>().hasBeenUnlocked = true;
         }
-        if (gameManager.Wave >= 29)
+        if (gameManager.Wave >= 29 && !frogPanel.GetComponent<frogPanel>().hasBeenUnlocked)
         {
             monsterIcons[3].SetActive(true);
+            frogPanel.GetComponent<frogPanel>().ShowPanel();
+            frogPanel.GetComponent<frogPanel>().hasBeenUnlocked = true;
         }
-        if (gameManager.Wave >= 29)
+        if (gameManager.Wave >= 39 && !magicPanel.GetComponent<magigMirtPanel>().hasBeenUnlocked)
         {
             monsterIcons[4].SetActive(true);
+            magicPanel.GetComponent<magigMirtPanel>().ShowPanel();
+            magicPanel.GetComponent<magigMirtPanel>().hasBeenUnlocked = true;
         }
 
         if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Q))
@@ -152,7 +172,6 @@ public class SpawnEnemy : MonoBehaviour
         }
     }
 
-
     private void StartNextWave()
     {
         currentWave = waveGenerator.GenerateWave();
@@ -162,9 +181,15 @@ public class SpawnEnemy : MonoBehaviour
     private void SpawnEnemyWithInterval(GameObject enemyPrefab)
     {
         enemyPrefab.gameObject.GetComponent<MoveEnemy>().waypoints = waypoints;
-        Instantiate(enemyPrefab, waypoints[0].transform.position, Quaternion.identity);
-
+        if(!gameManager.gameOver)
+        {
+            Instantiate(enemyPrefab, waypoints[0].transform.position, Quaternion.identity);
+        }
         enemySpawnInterval = Random.Range(5, 6);
     }
 
+    private IEnumerator WaitAndDoSomething()
+    {
+        yield return new WaitForSeconds(5f);
+    }
 }

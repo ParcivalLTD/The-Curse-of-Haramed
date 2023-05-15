@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class BulletBehavior : MonoBehaviour
@@ -52,17 +54,7 @@ public class BulletBehavior : MonoBehaviour
                 {
                     Destroy(target);
 
-                    if (gameManager.goldenHogObtained)
-                    {
-                        gameManager.Gold += (int)(healthBar.maxHealth / 5 * 1.1f);
-
-                    }
-                    else
-                    {
-                        gameManager.Gold += (int)healthBar.maxHealth / 5;
-                    }
-
-                    if (Random.value < 0.1)
+                    if (UnityEngine.Random.value < 0.1)
                     {
                         GameObject gem = Instantiate(GemPrefab, transform.position, Quaternion.identity);
                         gem.transform.parent = GameObject.Find("GemsContainer").transform;
@@ -70,7 +62,6 @@ public class BulletBehavior : MonoBehaviour
                     }
 
                 }
-
 
             }
             Destroy(gameObject);

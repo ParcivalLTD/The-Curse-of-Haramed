@@ -20,7 +20,6 @@ public class pausegame : MonoBehaviour
     public Toggle musicMuteToggle;
     public GameObject trackNameObj;
 
-    // Settings variables
     public bool isFullscreen;
     private float sfxVolume;
     private float musicVolume;

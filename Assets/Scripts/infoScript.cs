@@ -22,7 +22,7 @@ public class infoScript : MonoBehaviour
         }
         else if (transform.parent.parent.parent.name.Contains("Frog"))
         {
-            textMeshPro.text = "Quak Quak Quak Quak Quak Quak Quak Quak Quak Quak Quak Quak Quak Quak Quak Quak Quak Quak Quak Quak Quak Quak Quak Quak Quak Quak.";
+            textMeshPro.text = "Quak Quak Quak Quak Quak Quak Quak Quak Quak Quak Quak Quak Quak Quak Quak Quak Quak.";
         }
     }
 

@@ -48,9 +48,23 @@ public class WaveGenerator
             }
         }
 
-        maxEnemiesPerWave += 1;
-        spawnInterval *= 0.95f;
-        waveDelay += 1f;
+
+        if (waveNumber >= 10)
+        {
+            foreach (GameObject enemyPrefab in enemyPrefabs)
+            {
+                HealthBar enemyHealth = enemyPrefab.GetComponentInChildren<HealthBar>();
+                enemyHealth.maxHealth += (waveNumber * 3);
+                enemyHealth.currentHealth += (waveNumber * 3);
+
+                MoveEnemy enemyMovement = enemyPrefab.GetComponent<MoveEnemy>();
+                enemyMovement.speed *= 1.2f;
+            }
+
+            maxEnemiesPerWave += 1;
+            spawnInterval *= 0.95f;
+            waveDelay *= 0.9f;
+        }
 
         isWaitingForWave = true;
         CoroutineHelper.Instance.StartCoroutine(StartNextWaveDelayed());
@@ -59,7 +73,7 @@ public class WaveGenerator
         {
             output += spawnZiffern[i] + "-";
         }
-        Debug.Log("Wave " + waveNumber + ": " + output);
+        //Debug.Log("Wave " + waveNumber + ": " + output);
         return wave;
     }
 

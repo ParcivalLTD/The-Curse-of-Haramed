@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -28,7 +29,7 @@ public class ShootEnemies : MonoBehaviour
     void Update()
     {
         critChance = GameObject.Find("Upgrades").GetComponent<miscUpgrades>().critChance;
-        Debug.Log("" + critChance);
+        //Debug.Log("" + critChance);
 
         if (monsterData.nameOfMonster == "Frog")
         {
@@ -116,6 +117,7 @@ public class ShootEnemies : MonoBehaviour
             GameObject.FindGameObjectWithTag("Sound").gameObject.GetComponent<SoundManager>().PlaySoundEffect(9);
         }
 
+        GameManagerBehavior gameManager = GameObject.Find("GameManager").GetComponent<GameManagerBehavior>();
 
         GameObject bulletPrefab = monsterData.CurrentLevel.bullet;
 
@@ -133,6 +135,14 @@ public class ShootEnemies : MonoBehaviour
 
         bool isCritical = Random.Range(0f, 100f) < critChance;
         bulletComp.damage = (int) (isCritical ? bulletComp.damage * 1.2f : bulletComp.damage);
+
+        if (gameManager.goldenHogObtained)
+        {
+            gameManager.Gold += (int) (bulletPrefab.GetComponent<BulletBehavior>().damage / 20 * 1.1f);
+        } else
+        {
+            gameManager.Gold += (int) bulletPrefab.GetComponent<BulletBehavior>().damage / 20;
+        }
 
         if (isCritical)
         {

@@ -35,17 +35,6 @@ public class EnemyDestructionDings : MonoBehaviour
         if (healthBar.currentHealth <= 0)
         {
             Destroy(gameObject);
-            if(gameManager.goldenHogObtained)
-            {
-                gameManager.Gold += (int)(healthBar.maxHealth / 5 * 1.1f);
-
-            }
-            else
-            {
-                gameManager.Gold += (int)healthBar.maxHealth / 5;
-            }
-
-
 
             if (Random.value < 0.1)
             {
