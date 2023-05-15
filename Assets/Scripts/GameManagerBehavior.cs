@@ -202,7 +202,7 @@ public class GameManagerBehavior : MonoBehaviour
 
         Gold = 500;
         Wave = 0;
-        Health = 5999;
+        Health = 5;
         Gems = 0;
         GameObject[] monsters = GameObject.FindGameObjectsWithTag("Monster");
         foreach (GameObject monster in monsters)

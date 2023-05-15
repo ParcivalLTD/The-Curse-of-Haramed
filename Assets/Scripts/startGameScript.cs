@@ -14,8 +14,7 @@ public class startGameScript : MonoBehaviour
     private float sliderSpeed = 2f;
 
     public string nextSceneName;
-
-    public int selectedLevel;
+    SimpleScrollSnap simpleScrollSnap;
     public void LoadNextScene()
     {
         StartCoroutine(LoadSceneAsync());
@@ -24,6 +23,12 @@ public class startGameScript : MonoBehaviour
         {
             Destroy(audioListener.gameObject);
         }
+    }
+
+    private void Start()
+    {
+        simpleScrollSnap = GameObject.Find("Scroll-Snap").GetComponent<SimpleScrollSnap>();
+        simpleScrollSnap.StartingPanel = 0;
     }
 
     void Update()
@@ -35,10 +40,10 @@ public class startGameScript : MonoBehaviour
             SliderHolder.slider.value = currentSliderValue;
         }
 
-        if(selectedLevel  == 0)
+        if(simpleScrollSnap.SelectedPanel == 0)
         {
             nextSceneName = "GameScene";
-        } else if (selectedLevel == 1)
+        } else if(simpleScrollSnap.SelectedPanel == 1)
         {
             nextSceneName = "GameScene1";
         }
@@ -47,17 +52,6 @@ public class startGameScript : MonoBehaviour
     public void exitGame()
     {
         Application.Quit();
-    }
-
-
-    public void nextLevel()
-    {
-        selectedLevel++;
-    }
-
-    public void previousLevel()
-    {
-        selectedLevel--;
     }
 
     IEnumerator LoadSceneAsync()

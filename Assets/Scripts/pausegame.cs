@@ -137,7 +137,7 @@ public class pausegame : MonoBehaviour
     {
         isPaused = !isPaused;
 
-        if (SceneManager.GetActiveScene().name == "GameScene")
+        if (SceneManager.GetActiveScene().name != "Startscreen")
         {
             bool is2xSpeed = GameObject.Find("Speed").GetComponent<speedScript>().isTwoXSpeed;
         }
@@ -150,7 +150,7 @@ public class pausegame : MonoBehaviour
         }
         else
         {
-            if (SceneManager.GetActiveScene().name == "GameScene")
+            if (SceneManager.GetActiveScene().name != "Startscreen")
             {
                 bool is2xSpeed = GameObject.Find("Speed").GetComponent<speedScript>().isTwoXSpeed;
 
@@ -175,7 +175,9 @@ public class pausegame : MonoBehaviour
 
     public void Restart()
     {
-        SceneManager.LoadScene("Gamescene");
+        string sceneName = SceneManager.GetActiveScene().name;
+
+        SceneManager.LoadScene(sceneName);
         TogglePause();
     }
 }
