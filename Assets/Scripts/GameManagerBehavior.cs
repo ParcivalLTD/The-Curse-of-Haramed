@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManagerBehavior : MonoBehaviour
@@ -18,11 +19,15 @@ public class GameManagerBehavior : MonoBehaviour
     private int gems;
     public Text gemsLabel;
     public bool goldenHogObtained = false;
+    public GameObject tutorial;
 
     private float time;
     public Text timeLabel;
     private int killCount;
     public Text killCountLabel;
+
+    public GameObject gameOverPanel;
+    public GameObject victoryPanel;
 
     private Vector3 position;
 
@@ -49,10 +54,10 @@ public class GameManagerBehavior : MonoBehaviour
             if (health <= 0 && !gameOver)
             {
                 gameOver = true;
-                GameObject gameOverText = GameObject.FindGameObjectWithTag("GameOver");
-                gameOverText.GetComponent<Animator>().SetBool("gameOver", true);
+                gameOverPanel.SetActive(true);
+                Time.timeScale = 0;
 
-                GameObject.FindGameObjectWithTag("Sound").gameObject.GetComponent<SoundManager>().PlaySoundEffect(4);
+                GameObject.FindGameObjectWithTag("Sound").gameObject.GetComponent<SoundManager>().PlaySoundEffect(0);
 
             }
 
@@ -104,6 +109,11 @@ public class GameManagerBehavior : MonoBehaviour
                 {
                     nextWaveLabels[i].GetComponent<Animator>().SetTrigger("nextWave");
                 }
+            }
+            if(wave == 2)
+            {
+                victoryPanel.transform.Find("thing").gameObject.SetActive(true);
+                Time.timeScale = 0;
             }
             waveLabel.text = (wave + 1).ToString();
         }
@@ -191,6 +201,11 @@ public class GameManagerBehavior : MonoBehaviour
 
     void Start()
     {
+        if(SceneManager.GetActiveScene().name == "GameScene")
+        {
+            tutorial.SetActive(true);
+        }
+
         time = 0f;
         UpdateTimeLabel();
         killCount = 0;
@@ -200,7 +215,7 @@ public class GameManagerBehavior : MonoBehaviour
 
         Time.timeScale = 1f;
 
-        Gold = 500;
+        Gold = 750;
         Wave = 0;
         Health = 5;
         Gems = 0;
@@ -236,6 +251,7 @@ public class GameManagerBehavior : MonoBehaviour
 
     void Update()
     {
+
         if (GameObject.Find("Speed").GetComponent<speedScript>().isTwoXSpeed)
         {
             time += Time.deltaTime / 2f;

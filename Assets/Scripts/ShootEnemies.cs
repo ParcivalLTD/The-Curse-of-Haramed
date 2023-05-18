@@ -53,8 +53,8 @@ public class ShootEnemies : MonoBehaviour
                 MoveEnemy enemyScript = enemy.GetComponent<MoveEnemy>();
                 if (enemyScript != null)
                 {
-                    enemyScript.speed *= 0.8f;
-                    //TODO
+                    float speed = enemyScript.speed * 0.70f;
+                    enemyScript.changeSpeed(speed);
                 }
             }
         }

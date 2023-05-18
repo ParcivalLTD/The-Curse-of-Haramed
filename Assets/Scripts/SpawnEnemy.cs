@@ -20,6 +20,8 @@ public class SpawnEnemy : MonoBehaviour
     public GameObject frogPanel;
     public GameObject magicPanel;
 
+    public SpriteRenderer[] notUnlockedSprites;
+
     private void Start()
     {
         waveGenerator = new WaveGenerator(new List<GameObject>(enemyPrefabs), waypoints);
@@ -52,30 +54,35 @@ public class SpawnEnemy : MonoBehaviour
             monsterIcons[0].SetActive(true);
             //catPanel.GetComponent<catPanel>().ShowPanel();
             catPanel.GetComponent<catPanel>().hasBeenUnlocked = true;
+            notUnlockedSprites[0].sprite = null;
         }
         if (gameManager.Wave >= 9 && !platapusPanel.GetComponent<platapusPanel>().hasBeenUnlocked)
         {
             monsterIcons[1].SetActive(true);
             platapusPanel.GetComponent<platapusPanel>().ShowPanel();
             platapusPanel.GetComponent<platapusPanel>().hasBeenUnlocked = true;
+            notUnlockedSprites[1].sprite = null;
         }
         if (gameManager.Wave >= 19 && !gorillaPanel.GetComponent<gorillaPanel>().hasBeenUnlocked)
         {
             monsterIcons[2].SetActive(true);
             gorillaPanel.GetComponent<gorillaPanel>().ShowPanel();
             gorillaPanel.GetComponent<gorillaPanel>().hasBeenUnlocked = true;
+            notUnlockedSprites[2].sprite = null;
         }
         if (gameManager.Wave >= 29 && !frogPanel.GetComponent<frogPanel>().hasBeenUnlocked)
         {
             monsterIcons[3].SetActive(true);
             frogPanel.GetComponent<frogPanel>().ShowPanel();
             frogPanel.GetComponent<frogPanel>().hasBeenUnlocked = true;
+            notUnlockedSprites[3].sprite = null;
         }
         if (gameManager.Wave >= 39 && !magicPanel.GetComponent<magigMirtPanel>().hasBeenUnlocked)
         {
             monsterIcons[4].SetActive(true);
             magicPanel.GetComponent<magigMirtPanel>().ShowPanel();
             magicPanel.GetComponent<magigMirtPanel>().hasBeenUnlocked = true;
+            notUnlockedSprites[4].sprite = null;
         }
 
         if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Q))
@@ -84,6 +91,19 @@ public class SpawnEnemy : MonoBehaviour
             monsterIcons[3].SetActive(true);
             monsterIcons[1].SetActive(true);
             monsterIcons[4].SetActive(true);
+            platapusPanel.GetComponent<platapusPanel>().hasBeenUnlocked = true;
+            notUnlockedSprites[1].sprite = null;
+            gorillaPanel.GetComponent<gorillaPanel>().hasBeenUnlocked = true;
+            notUnlockedSprites[2].sprite = null;
+            frogPanel.GetComponent<frogPanel>().hasBeenUnlocked = true;
+            notUnlockedSprites[3].sprite = null;
+            magicPanel.GetComponent<magigMirtPanel>().hasBeenUnlocked = true;
+            notUnlockedSprites[4].sprite = null;
+            magicPanel.GetComponent<magigMirtPanel>().ShowPanel();
+            frogPanel.GetComponent<frogPanel>().ShowPanel();
+            gorillaPanel.GetComponent<gorillaPanel>().ShowPanel();
+            platapusPanel.GetComponent<platapusPanel>().ShowPanel();
+            
         }
 
         if ((currentWave == null || currentIndex >= currentWave.Count))
@@ -150,7 +170,7 @@ public class SpawnEnemy : MonoBehaviour
             }
             else if (icon.name == "magicmirt0")
             {
-                monsterCost = 1600;
+                monsterCost = 10000;
             }
             else
             {

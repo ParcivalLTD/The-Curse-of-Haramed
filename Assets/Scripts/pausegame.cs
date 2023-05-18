@@ -12,6 +12,7 @@ public class pausegame : MonoBehaviour
     public Sprite pausedSprite;
     public Sprite normalSprite;
     public GameObject pauseOverlay;
+    private bool gameOver;
 
     public Toggle fullscreenToggle;
     public Slider sfxSlider;
@@ -35,6 +36,8 @@ public class pausegame : MonoBehaviour
 
     public void Update()
     {
+        //gameOver = GameObject.Find("GameManager").GetComponent<GameManagerBehavior>().gameOver;
+
         trackNameObj.GetComponent<TextMeshProUGUI>().text = GameObject.FindGameObjectWithTag("Music").GetComponent<MusicPlayer>().GetCurrentTrackName();
 
         if (isPaused)
@@ -51,6 +54,7 @@ public class pausegame : MonoBehaviour
     {
         pauseImage = transform.Find("pauseImage").gameObject;
         pauseOverlay.SetActive(false);
+        gameOver = GameObject.Find("GameManager").GetComponent<GameManagerBehavior>().gameOver;
 
         if (!PlayerPrefs.HasKey("isFullscreen"))
         {
@@ -170,7 +174,10 @@ public class pausegame : MonoBehaviour
 
     public void ReturnToMenu()
     {
-        SceneManager.LoadScene("Startscreen");
+        gameOver = true;
+        GameObject gameOverText = GameObject.FindGameObjectWithTag("GameOver");
+        gameOverText.GetComponent<Animator>().SetBool("gameOver", true);
+        TogglePause();
     }
 
     public void Restart()

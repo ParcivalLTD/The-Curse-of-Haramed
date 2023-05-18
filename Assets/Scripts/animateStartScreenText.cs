@@ -1,6 +1,10 @@
 using UnityEngine;
 using TMPro;
 using System.Collections;
+using Unity.VisualScripting;
+using DanielLochner.Assets.SimpleScrollSnap;
+using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 public class animateStartScreenText : MonoBehaviour
 {
@@ -10,12 +14,13 @@ public class animateStartScreenText : MonoBehaviour
 
     private RectTransform rectTransform;
     private Vector3 startPos;
+    
 
     void Start()
     {
         rectTransform = GetComponent<RectTransform>();
         startPos = rectTransform.position;
-        StartCoroutine(FloatAnimation());
+        StartCoroutine(FloatAnimation()); 
     }
 
     IEnumerator FloatAnimation()

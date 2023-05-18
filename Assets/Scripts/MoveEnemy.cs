@@ -9,6 +9,7 @@ public class MoveEnemy : MonoBehaviour
     public int currentWaypoint = 0;
     public float lastWaypointSwitchTime;
     public float speed = 1.0f;
+    private bool speedChanged = false;
 
     public float totalTimeForPath;
 
@@ -50,6 +51,27 @@ public class MoveEnemy : MonoBehaviour
                 gameManager.Health -= 1;
 
             }
+        }
+    }
+
+    public void changeSpeed(float newSpeed)
+    {
+        if (speedChanged)
+        {
+            return;
+        }
+        else
+        {
+            speedChanged = true;
+            float progress = (Time.time - lastWaypointSwitchTime) / totalTimeForPath;
+
+            speed = newSpeed;
+            Vector3 startPosition = waypoints[currentWaypoint].transform.position;
+            Vector3 endPosition = waypoints[currentWaypoint + 1].transform.position;
+            float pathLength = Vector2.Distance(startPosition, endPosition);
+            totalTimeForPath = pathLength / speed;
+
+            lastWaypointSwitchTime = Time.time - (progress * totalTimeForPath);
         }
     }
 

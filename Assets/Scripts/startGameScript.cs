@@ -12,6 +12,8 @@ public class startGameScript : MonoBehaviour
     private float currentSliderValue = 0f;
     private float targetSliderValue = 0f;
     private float sliderSpeed = 2f;
+    public UnityEngine.UI.Button start;
+    public GameObject lockB;
 
     public string nextSceneName;
     SimpleScrollSnap simpleScrollSnap;
@@ -28,7 +30,15 @@ public class startGameScript : MonoBehaviour
     private void Start()
     {
         simpleScrollSnap = GameObject.Find("Scroll-Snap").GetComponent<SimpleScrollSnap>();
-        simpleScrollSnap.StartingPanel = 0;
+        PlayerPrefs.SetInt("GameScene", 1);
+    }
+
+    public void resetPrefs()
+    {
+        PlayerPrefs.SetInt("GameScene", 0);
+        PlayerPrefs.SetInt("GameScene1", 0);
+        PlayerPrefs.SetInt("GameScene2", 0);
+        Debug.Log("dsfsdf");
     }
 
     void Update()
@@ -40,12 +50,46 @@ public class startGameScript : MonoBehaviour
             SliderHolder.slider.value = currentSliderValue;
         }
 
-        if(simpleScrollSnap.SelectedPanel == 0)
+        if (simpleScrollSnap.SelectedPanel == 0)
         {
+
+            GetComponent<Button>().interactable = true;
             nextSceneName = "GameScene";
-        } else if(simpleScrollSnap.SelectedPanel == 1)
+            GetComponentInChildren<TextMeshProUGUI>().text = "Start Game";
+            GetComponent<Image>().color = Color.white;
+            
+        }
+        if (simpleScrollSnap.SelectedPanel == 1)
         {
-            nextSceneName = "GameScene1";
+            if (PlayerPrefs.GetInt("GameScene") == 1)
+            {
+                GetComponent<Button>().interactable = true;
+                nextSceneName = "GameScene1";
+                GetComponentInChildren<TextMeshProUGUI>().text = "Start Game";
+                GetComponent<Image>().color = Color.white;
+            }
+            else
+            {
+                GetComponent<Button>().interactable = false;
+                GetComponentInChildren<TextMeshProUGUI>().text = "Locked";
+                GetComponent<Image>().color = new Color(171, 22, 22);
+            }
+        }
+        if (simpleScrollSnap.SelectedPanel == 2)
+        {
+            if (PlayerPrefs.GetInt("GameScene1") == 1)
+            {
+                GetComponent<Button>().interactable = true;
+                nextSceneName = "GameScene2";
+                GetComponentInChildren<TextMeshProUGUI>().text = "Start Game";
+                GetComponent<Image>().color = Color.white;
+            }
+            else
+            {
+                GetComponent<Button>().interactable = false;
+                GetComponentInChildren<TextMeshProUGUI>().text = "Locked";
+                GetComponent<Image>().color = new Color(171, 22, 22);
+            }
         }
     }
 
