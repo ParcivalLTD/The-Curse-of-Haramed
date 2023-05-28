@@ -13,7 +13,7 @@ public class Startscreen : MonoBehaviour
     void Start()
     {
         audioSource.Play();
-        mainCamera = Camera.main; // get camera reference
+        mainCamera = Camera.main;
         SetScaleableWindow();
     }
 
@@ -23,7 +23,7 @@ public class Startscreen : MonoBehaviour
 
     void SetScaleableWindow()
     {
-        // Update screen size, aspect ratio, and visual rectangle
+
         mainCamera.aspect = ASPECT_RATIO;
         float scaleHeight = Screen.width / (16f * ASPECT_RATIO);
         float scaleWidth = Screen.height / 9f;

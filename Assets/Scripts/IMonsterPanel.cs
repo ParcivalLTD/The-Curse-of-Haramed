@@ -65,4 +65,12 @@ public abstract class IMonsterPanel : MonoBehaviour
             infoText.text = gameObject.transform.Find("Canvas").transform.Find("Panel").transform.Find("info").GetComponent<TextMeshProUGUI>().text;
         }
     }
+
+    private void Update()
+    {
+        if (Input.anyKeyDown)
+        {
+            HidePanel();
+        }
+    }
 }

@@ -13,7 +13,6 @@ public class TitleText : MonoBehaviour
         gameManager = GameObject.Find("GameManager").GetComponent<GameManagerBehavior>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (monster.GetComponent<MonsterData>().CurrentLevel.Level != 10)

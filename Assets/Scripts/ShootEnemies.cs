@@ -48,15 +48,7 @@ public class ShootEnemies : MonoBehaviour
         }
         else if (monsterData.nameOfMonster == "Magicmirt")
         {
-            foreach (GameObject enemy in enemiesInRange)
-            {
-                MoveEnemy enemyScript = enemy.GetComponent<MoveEnemy>();
-                if (enemyScript != null)
-                {
-                    float speed = enemyScript.speed * 0.70f;
-                    enemyScript.changeSpeed(speed);
-                }
-            }
+            
         }
         else
         {
@@ -182,6 +174,10 @@ public class ShootEnemies : MonoBehaviour
                 other.gameObject.GetComponent<EnemyDestructionDings>();
             del.enemyDelegate += OnEnemyDestroy;
         }
+        if(monsterData.nameOfMonster == "Magicmirt")
+        {
+            other.gameObject.GetComponent<MoveEnemy>().changeSpeed(other.gameObject.GetComponent<MoveEnemy>().speed * 0.5f);
+        }
     }
 
     void OnTriggerExit2D(Collider2D other)
@@ -192,7 +188,13 @@ public class ShootEnemies : MonoBehaviour
             EnemyDestructionDings del =
                 other.gameObject.GetComponent<EnemyDestructionDings>();
             del.enemyDelegate -= OnEnemyDestroy;
+            
         }
+        if (monsterData.nameOfMonster == "Magicmirt")
+        {
+            other.gameObject.GetComponent<MoveEnemy>().changeSpeed(other.gameObject.GetComponent<MoveEnemy>().speed / 0.5f);
+        }
+
     }
 
 }

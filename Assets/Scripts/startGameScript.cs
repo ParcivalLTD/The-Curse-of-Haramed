@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
 using DanielLochner.Assets.SimpleScrollSnap;
+using static UnityEngine.AdaptivePerformance.Provider.AdaptivePerformanceSubsystemDescriptor;
 
 public class startGameScript : MonoBehaviour
 {
@@ -13,7 +14,11 @@ public class startGameScript : MonoBehaviour
     private float targetSliderValue = 0f;
     private float sliderSpeed = 2f;
     public UnityEngine.UI.Button start;
-    public GameObject lockB;
+    public GameObject namePanel;
+
+    public GameObject[] panels;
+
+    private int frameCount = 0;
 
     public string nextSceneName;
     SimpleScrollSnap simpleScrollSnap;
@@ -30,19 +35,29 @@ public class startGameScript : MonoBehaviour
     private void Start()
     {
         simpleScrollSnap = GameObject.Find("Scroll-Snap").GetComponent<SimpleScrollSnap>();
-        PlayerPrefs.SetInt("GameScene", 1);
     }
 
     public void resetPrefs()
     {
-        PlayerPrefs.SetInt("GameScene", 0);
-        PlayerPrefs.SetInt("GameScene1", 0);
-        PlayerPrefs.SetInt("GameScene2", 0);
-        Debug.Log("dsfsdf");
+        PlayerPrefs.DeleteAll();
+        PlayerPrefs.SetInt("difficulty", 0);
+        namePanel.SetActive(true);
+    }
+
+    public void unlockAllLevels()
+    {
+        PlayerPrefs.SetInt("GameScene", 1);
+        PlayerPrefs.SetInt("GameScene1", 1);
+        PlayerPrefs.SetInt("GameScene2", 1);
     }
 
     void Update()
     {
+        if(PlayerPrefs.GetString("playerName") == "")
+        {
+
+        }
+
         currentSliderValue = Mathf.Lerp(currentSliderValue, targetSliderValue, Time.deltaTime * sliderSpeed);
 
         if (SliderHolder.slider != null)
@@ -50,45 +65,67 @@ public class startGameScript : MonoBehaviour
             SliderHolder.slider.value = currentSliderValue;
         }
 
-        if (simpleScrollSnap.SelectedPanel == 0)
+        if (frameCount < 30)
         {
+            Debug.Log(PlayerPrefs.GetInt("currentPanel"));
+            simpleScrollSnap.GoToPanel(PlayerPrefs.GetInt("currentPanel"));
 
-            GetComponent<Button>().interactable = true;
-            nextSceneName = "GameScene";
-            GetComponentInChildren<TextMeshProUGUI>().text = "Start Game";
-            GetComponent<Image>().color = Color.white;
-            
-        }
-        if (simpleScrollSnap.SelectedPanel == 1)
+            frameCount++;
+        } else
         {
-            if (PlayerPrefs.GetInt("GameScene") == 1)
+            if (simpleScrollSnap.SelectedPanel == 0)
             {
                 GetComponent<Button>().interactable = true;
-                nextSceneName = "GameScene1";
+                nextSceneName = "GameScene";
                 GetComponentInChildren<TextMeshProUGUI>().text = "Start Game";
+                GetComponentInChildren<TextMeshProUGUI>().color = Color.white;
                 GetComponent<Image>().color = Color.white;
+                panels[0].GetComponent<unlockPanelScrollSnap>().unlockPanel();
+                PlayerPrefs.SetInt("currentPanel", simpleScrollSnap.SelectedPanel);
             }
-            else
+            if (simpleScrollSnap.SelectedPanel == 1)
             {
-                GetComponent<Button>().interactable = false;
-                GetComponentInChildren<TextMeshProUGUI>().text = "Locked";
-                GetComponent<Image>().color = new Color(171, 22, 22);
+                if (PlayerPrefs.GetInt("GameScene") == 1)
+                {
+                    GetComponent<Button>().interactable = true;
+                    nextSceneName = "GameScene1";
+                    GetComponentInChildren<TextMeshProUGUI>().text = "Start Game";
+                    GetComponentInChildren<TextMeshProUGUI>().color = Color.white;
+                    GetComponent<Image>().color = Color.white;
+                    panels[1].GetComponent<unlockPanelScrollSnap>().unlockPanel();
+                    PlayerPrefs.SetInt("currentPanel", simpleScrollSnap.SelectedPanel);
+                }
+                else
+                {
+                    GetComponent<Button>().interactable = false;
+                    GetComponentInChildren<TextMeshProUGUI>().text = "Locked";
+                    GetComponent<Image>().color = new Color(171, 22, 22);
+                    GetComponentInChildren<TextMeshProUGUI>().color = Color.gray;
+                    panels[1].GetComponent<unlockPanelScrollSnap>().lockPanel();
+                    PlayerPrefs.SetInt("currentPanel", simpleScrollSnap.SelectedPanel);
+                }
             }
-        }
-        if (simpleScrollSnap.SelectedPanel == 2)
-        {
-            if (PlayerPrefs.GetInt("GameScene1") == 1)
+            if (simpleScrollSnap.SelectedPanel == 2)
             {
-                GetComponent<Button>().interactable = true;
-                nextSceneName = "GameScene2";
-                GetComponentInChildren<TextMeshProUGUI>().text = "Start Game";
-                GetComponent<Image>().color = Color.white;
-            }
-            else
-            {
-                GetComponent<Button>().interactable = false;
-                GetComponentInChildren<TextMeshProUGUI>().text = "Locked";
-                GetComponent<Image>().color = new Color(171, 22, 22);
+                if (PlayerPrefs.GetInt("GameScene1") == 1)
+                {
+                    GetComponent<Button>().interactable = true;
+                    nextSceneName = "GameScene2";
+                    GetComponentInChildren<TextMeshProUGUI>().text = "Start Game";
+                    GetComponent<Image>().color = Color.white;
+                    GetComponentInChildren<TextMeshProUGUI>().color = Color.white;
+                    panels[2].GetComponent<unlockPanelScrollSnap>().unlockPanel();
+                    PlayerPrefs.SetInt("currentPanel", simpleScrollSnap.SelectedPanel);
+                }
+                else
+                {
+                    GetComponent<Button>().interactable = false;
+                    GetComponentInChildren<TextMeshProUGUI>().text = "Locked";
+                    GetComponent<Image>().color = new Color(171, 22, 22);
+                    GetComponentInChildren<TextMeshProUGUI>().color = Color.gray;
+                    panels[2].GetComponent<unlockPanelScrollSnap>().lockPanel();
+                    PlayerPrefs.SetInt("currentPanel", simpleScrollSnap.SelectedPanel);
+                }
             }
         }
     }

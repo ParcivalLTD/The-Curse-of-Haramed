@@ -21,14 +21,20 @@ public class startScreenButtonCheck : MonoBehaviour
             nextButton.interactable = false;
         }
         else if (simpleScrollSnap.SelectedPanel == (simpleScrollSnap.StartingPanel)) {
+
             previousButton.interactable = false;
+        }
+
+        if(simpleScrollSnap.SelectedPanel == 1)
+        {
+            previousButton.interactable = true;
         }
 
         if (simpleScrollSnap.SelectedPanel != (simpleScrollSnap.Panels.Length - 1))
         {
             nextButton.interactable = true;
         }
-        else if (simpleScrollSnap.SelectedPanel != (simpleScrollSnap.StartingPanel))
+        else if (simpleScrollSnap.SelectedPanel != (simpleScrollSnap.StartingPanel - 1))
         {
             previousButton.interactable = true;
         }

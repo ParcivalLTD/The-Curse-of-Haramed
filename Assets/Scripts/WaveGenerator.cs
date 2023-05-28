@@ -54,11 +54,11 @@ public class WaveGenerator
             foreach (GameObject enemyPrefab in enemyPrefabs)
             {
                 HealthBar enemyHealth = enemyPrefab.GetComponentInChildren<HealthBar>();
-                enemyHealth.maxHealth += (waveNumber * 3);
-                enemyHealth.currentHealth += (waveNumber * 3);
+                enemyHealth.maxHealth += (waveNumber * 2.2f);
+                enemyHealth.currentHealth += (waveNumber * 2.2f);
 
                 MoveEnemy enemyMovement = enemyPrefab.GetComponent<MoveEnemy>();
-                enemyMovement.speed *= 1.2f;
+                enemyMovement.speed *= 1.13f;
             }
 
             maxEnemiesPerWave += 1;
@@ -73,7 +73,6 @@ public class WaveGenerator
         {
             output += spawnZiffern[i] + "-";
         }
-        //Debug.Log("Wave " + waveNumber + ": " + output);
         return wave;
     }
 
@@ -87,7 +86,7 @@ public class WaveGenerator
         while (ziffernSum < maxZiffernSum)
         {
             int remainingZiffern = maxZiffernSum - ziffernSum;
-            int maxSegmentSize = Mathf.Min(remainingZiffern, 15);
+            int maxSegmentSize = Mathf.Min(remainingZiffern, 25);
             int segmentSize = Random.Range(1, maxSegmentSize + 1);
             spawnZiffern.Add(segmentSize);
             ziffernSum += segmentSize;

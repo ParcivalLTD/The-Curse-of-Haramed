@@ -54,7 +54,7 @@ public class BulletBehavior : MonoBehaviour
                 {
                     Destroy(target);
 
-                    if (UnityEngine.Random.value < 0.1)
+                    if (UnityEngine.Random.value < 0.2)
                     {
                         GameObject gem = Instantiate(GemPrefab, transform.position, Quaternion.identity);
                         gem.transform.parent = GameObject.Find("GemsContainer").transform;

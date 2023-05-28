@@ -31,6 +31,10 @@ public class miscUpgrades : MonoBehaviour
     public int handOfBloodCost;
     public bool handOfBloodBought = false;
 
+    public GameObject buySpot;
+    public int buySpotCostGold;
+    public int buySpotCostGems;
+
     public GameObject magomedsGlassesUpgradeButton;
     public int magomedsGlassesCost;
     private bool magomedsGlassesBought = false;
@@ -70,11 +74,18 @@ public class miscUpgrades : MonoBehaviour
         critChanceLevel = 1;
         critChanceCost = 15;
 
+        buySpotCostGems = 20;
+        buySpotCostGold = 100000;
+
         maldonadoUpgradeButton.transform.Find("buyFor").GetComponent<TextMeshProUGUI>().text = maldonadoCost.ToString();
         goldenHogUpgradeButton.transform.Find("buyFor").GetComponent<TextMeshProUGUI>().text = goldenHogCost.ToString();
         handOfBloodUpgadeButton.transform.Find("buyFor").GetComponent<TextMeshProUGUI>().text = handOfBloodCost.ToString();
         magomedsGlassesUpgradeButton.transform.Find("buyFor").GetComponent<TextMeshProUGUI>().text = magomedsGlassesCost.ToString();
         spanishHomeworkUpgradeButton.transform.Find("buyFor").GetComponent<TextMeshProUGUI>().text = spanishHomeworkCost.ToString();
+
+        buySpot.transform.Find("upgradeFor (1)").GetComponent<TextMeshProUGUI>().text = buySpotCostGems.ToString();
+        buySpot.transform.Find("upgradeFor").GetComponent<TextMeshProUGUI>().text = buySpotCostGold.ToString();
+
 
         critChanceUpgradeButton.transform.Find("upgradeFor").GetComponent<TextMeshProUGUI>().text = critChanceCost.ToString();
         critChanceUpgradeButton.transform.Find("info").GetComponent<TextMeshProUGUI>().text = "<b>Crit \nChance (" + critChanceLevel + "):</b>\n\n" + critChance.ToString() + "%";
@@ -91,6 +102,17 @@ public class miscUpgrades : MonoBehaviour
             critChance += critChanceIncrease;
             critChanceCost += 5;
             critChanceLevel++;
+        }
+    }
+
+    public void onOpenSpotBuy()
+    {
+        if (gameManager.Gems >= buySpotCostGems && gameManager.Gold >= buySpotCostGold)
+        {
+            gameManager.Gems -= buySpotCostGems;
+            gameManager.Gold -= buySpotCostGold;
+            buySpotCostGems += 2;
+            buySpotCostGold *= 2;
         }
     }
 
@@ -117,6 +139,9 @@ public class miscUpgrades : MonoBehaviour
             critChanceUpgradeButton.transform.Find("text").GetComponent<TextMeshProUGUI>().text = "Upgrade";
         }
 
+        buySpot.transform.Find("upgradeFor (1)").GetComponent<TextMeshProUGUI>().text = buySpotCostGems.ToString();
+        buySpot.transform.Find("upgradeFor").GetComponent<TextMeshProUGUI>().text = buySpotCostGold.ToString();
+
         cursorUpgradeButton.transform.Find("upgradeFor").GetComponent<TextMeshProUGUI>().text = cursorCost.ToString();
         cursorUpgradeButton.transform.Find("info").GetComponent<TextMeshProUGUI>().text = "<b>Cursor (" + cursorLevel + "):</b>\n\n" + cursorDamage.ToString() + " to " + (cursorDamage + cursorIncrease).ToString();
 
@@ -131,6 +156,17 @@ public class miscUpgrades : MonoBehaviour
         {
             maldonadoUpgradeButton.GetComponent<Button>().interactable = true;
             maldonadoUpgradeButton.transform.Find("text").GetComponent<TextMeshProUGUI>().text = "Buy";
+        }
+
+        if (gameManager.Gems < buySpotCostGems || gameManager.Gold < buySpotCostGold)
+        {
+            buySpot.GetComponent<Button>().interactable = false;
+            buySpot.transform.Find("text").GetComponent<TextMeshProUGUI>().text = "<size=30>Not enough gems!</size>";
+        }
+        else
+        {
+            buySpot.GetComponent<Button>().interactable = true;
+            buySpot.transform.Find("text").GetComponent<TextMeshProUGUI>().text = "Buy";
         }
 
         if (gameManager.Gems < goldenHogCost)

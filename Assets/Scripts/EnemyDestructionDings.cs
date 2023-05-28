@@ -36,7 +36,7 @@ public class EnemyDestructionDings : MonoBehaviour
         {
             Destroy(gameObject);
 
-            if (Random.value < 0.1)
+            if (Random.value < 0.2)
             {
                 GameObject gem = Instantiate(GemPrefab, transform.position, Quaternion.identity);
                 Destroy(gem, 3);

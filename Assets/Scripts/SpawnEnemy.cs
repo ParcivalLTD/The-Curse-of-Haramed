@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class SpawnEnemy : MonoBehaviour
 {
-    public GameObject[] enemyPrefabs; // Array of enemy prefabs
+    public GameObject[] enemyPrefabs; 
     private WaveGenerator waveGenerator;
     private List<GameObject> currentWave;
     private int currentIndex;

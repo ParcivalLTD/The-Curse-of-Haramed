@@ -9,7 +9,9 @@ public class MoveEnemy : MonoBehaviour
     public int currentWaypoint = 0;
     public float lastWaypointSwitchTime;
     public float speed = 1.0f;
-    private bool speedChanged = false;
+    public bool speedChanged = false;
+
+    public bool isSlowedDown;
 
     public float totalTimeForPath;
 
@@ -56,12 +58,7 @@ public class MoveEnemy : MonoBehaviour
 
     public void changeSpeed(float newSpeed)
     {
-        if (speedChanged)
-        {
-            return;
-        }
-        else
-        {
+
             speedChanged = true;
             float progress = (Time.time - lastWaypointSwitchTime) / totalTimeForPath;
 
@@ -72,7 +69,6 @@ public class MoveEnemy : MonoBehaviour
             totalTimeForPath = pathLength / speed;
 
             lastWaypointSwitchTime = Time.time - (progress * totalTimeForPath);
-        }
     }
 
     public GameObject getNextWaypoint()
@@ -94,6 +90,5 @@ public class MoveEnemy : MonoBehaviour
         }
         return distance;
     }
-
 
 }

@@ -141,6 +141,22 @@ public class UpgradeButton : MonoBehaviour
 
     private void Update()
     {
+        if(monster.GetComponent<MonsterData>().nameOfMonster == "Magicmirt")
+        {
+            radiusCost = (int) (1439 * monster.GetComponent<MonsterData>().CurrentLevel.Level * 1.2f);
+            radiusUpgradeFor.GetComponent<TextMeshProUGUI>().text = "- $" + radiusCost.ToString();
+            damageUpgradeFor.GetComponent<TextMeshProUGUI>().text = "- $" + damageCost.ToString();
+            fireRateUpgradeFor.GetComponent<TextMeshProUGUI>().text = "- $" + fireRateCost.ToString();
+            damageCost = 0;
+            fireRateCost = 0;
+        }
+
+        if (monster.GetComponent<MonsterData>().nameOfMonster == "Platapus")
+        {
+            radiusButton.GetComponent<Button>().interactable = false;
+            radiusButton.GetComponent<Button>().onClick.RemoveAllListeners();
+        }
+
         if (gameManager.Gold < damageCost)
         {
             damageButton.GetComponent<Button>().interactable = false;

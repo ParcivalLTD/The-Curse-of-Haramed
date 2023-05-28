@@ -1,4 +1,6 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -21,6 +23,8 @@ public class GameManagerBehavior : MonoBehaviour
     public bool goldenHogObtained = false;
     public GameObject tutorial;
 
+    public List<RectTransform> draggablePanels;
+
     private float time;
     public Text timeLabel;
     private int killCount;
@@ -28,54 +32,46 @@ public class GameManagerBehavior : MonoBehaviour
 
     public GameObject gameOverPanel;
     public GameObject victoryPanel;
+    public bool gameWon;
 
     private Vector3 position;
 
     public GameObject plusAnimationPrefab;
 
-    public int Health
+public int Health
+{
+    get { return health; }
+    set
     {
-        get
+        if (value < health)
         {
-            return health;
+            Camera.main.GetComponent<CameraShake>().Shake();
+            GameObject.FindGameObjectWithTag("Sound").gameObject.GetComponent<SoundManager>().PlaySoundEffect(2);
         }
-        set
+        health = value;
+        healthLabel.text = "" + health;
+        if (health <= 0 && !gameOver)
         {
-            
-
-            if (value < health)
+            gameOver = true;
+            gameOverPanel.SetActive(true);
+            Time.timeScale = 0;
+            GameObject.FindGameObjectWithTag("Sound").gameObject.GetComponent<SoundManager>().PlaySoundEffect(0);
+        }
+        for (int i = 0; i < healthIndicator.Length; i++)
+        {
+            if (i < Health)
             {
-                Camera.main.GetComponent<CameraShake>().Shake();
-                GameObject.FindGameObjectWithTag("Sound").gameObject.GetComponent<SoundManager>().PlaySoundEffect(2);
+                healthIndicator[i].SetActive(true);
             }
-            health = value;
-            healthLabel.text = "" + health;
-
-            if (health <= 0 && !gameOver)
+            else
             {
-                gameOver = true;
-                gameOverPanel.SetActive(true);
-                Time.timeScale = 0;
-
-                GameObject.FindGameObjectWithTag("Sound").gameObject.GetComponent<SoundManager>().PlaySoundEffect(0);
-
-            }
-
-            for (int i = 0; i < healthIndicator.Length; i++)
-            {
-                if (i < Health)
-                {
-                    healthIndicator[i].SetActive(true);
-                }
-                else
-                {
-                    healthIndicator[i].SetActive(false);
-                }
+                healthIndicator[i].SetActive(false);
             }
         }
     }
+}
 
-    public void SavePosition(Vector3 position)
+public void SavePosition(Vector3 position)
     {
         savedPosition = position;
     }
@@ -110,10 +106,11 @@ public class GameManagerBehavior : MonoBehaviour
                     nextWaveLabels[i].GetComponent<Animator>().SetTrigger("nextWave");
                 }
             }
-            if(wave == 2)
+            if(wave == PlayerPrefs.GetInt("wave"))
             {
                 victoryPanel.transform.Find("thing").gameObject.SetActive(true);
                 Time.timeScale = 0;
+                gameWon = true;
             }
             waveLabel.text = (wave + 1).ToString();
         }
@@ -121,21 +118,23 @@ public class GameManagerBehavior : MonoBehaviour
 
     public int Gold
     {
-        get
-        {
-            return gold;
-        }
+        get { return gold; }
         set
         {
             int goldDifference = value - gold;
+            float goldMultiplier = PlayerPrefs.GetFloat("GoldMultiplier", 1f);
+            if (goldDifference > 0)
+            {
+                goldDifference = Mathf.RoundToInt(goldDifference * goldMultiplier);
+            }
             gold = value;
             goldLabel.GetComponent<Text>().text = "$" + gold;
-
             if (goldDifference > 100 && goldDifference != 500)
             {
                 plusAnimationPrefab.GetComponent<Text>().text = "+ $" + goldDifference.ToString();
                 StartCoroutine(DisplayGoldDifference(true));
-            } else if(goldDifference < 0)
+            }
+            if (goldDifference < 0)
             {
                 plusAnimationPrefab.GetComponent<Text>().text = "- $" + Mathf.Abs(goldDifference).ToString();
                 StartCoroutine(DisplayGoldDifference(false));
@@ -217,7 +216,17 @@ public class GameManagerBehavior : MonoBehaviour
 
         Gold = 750;
         Wave = 0;
-        Health = 5;
+        int difficulty = PlayerPrefs.GetInt("difficulty");
+        if (difficulty == 0)
+        {
+            Health = 10;
+        } else if (difficulty == 1)
+        {
+            Health = 5;
+        } else if (difficulty == 2)
+        {
+            Health = 3;
+        }
         Gems = 0;
         GameObject[] monsters = GameObject.FindGameObjectsWithTag("Monster");
         foreach (GameObject monster in monsters)
@@ -232,6 +241,8 @@ public class GameManagerBehavior : MonoBehaviour
                 break;
             }
         }
+
+        GameObject[] canvases = GameObject.FindGameObjectsWithTag("CanvasPre");
     }
 
     public void ShowCanvas()
@@ -263,7 +274,22 @@ public class GameManagerBehavior : MonoBehaviour
 
         UpdateTimeLabel();
         Screen.fullScreen = GameObject.Find("Pause").GetComponent<pausegame>().isFullscreen;
-    }
 
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (GameObject.Find("Pause").GetComponent<pausegame>().isPaused)
+            {
+                GameObject.Find("Pause").GetComponent<pausegame>().TogglePause();
+            }
+            else
+            {
+                GameObject.Find("Pause").GetComponent<pausegame>().TogglePause();
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.F11)){
+            GameObject.Find("Pause").GetComponent<pausegame>().ToggleFullscreen();
+        }
+    }
 
 }
