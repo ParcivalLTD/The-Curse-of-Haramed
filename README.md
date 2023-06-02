@@ -1,6 +1,7 @@
 # The Curse of Haramed 
 <img src="https://github.com/ParcivalLTD/The-Curse-of-Haramed/assets/79400664/90b918d1-54dd-4a66-9d02-f543d3ea4d65" width="50" height="50"> 
 
+https://parcivalltd.itch.io/tcoh
 
 The Curse of Haramed is a 2D Unity tower-defense game set in a world where animals possess human-like intelligence. The player must break the curse of Haramed, a powerful and evil human named Magomed who has been transformed into a Haramed creature.
 
