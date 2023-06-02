@@ -49,4 +49,4 @@ Special thanks to the following individuals for their contributions:
 
 ## Contact
 
-For any inquiries or feedback, please contact me at [email protected]
+For any inquiries or feedback, please contact me at juliangabriel570@gmail.com
